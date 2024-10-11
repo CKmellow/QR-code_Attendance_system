@@ -4,7 +4,7 @@
     background-color: #f1a619;
     color: white;
     width: 250px;  /* Fixed width */
-    height: 100vh;
+    height:100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
