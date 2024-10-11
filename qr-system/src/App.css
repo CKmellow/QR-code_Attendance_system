@@ -1,5 +1,3 @@
-/* App.css */
-
 /* General styles for the app */
 body, html {
   margin: 0;
@@ -9,24 +7,25 @@ body, html {
 }
 
 /* Flexbox container for the sidebar and main content */
-.app-container {
-  display: flex;  /* Use flexbox for side-by-side layout */
-  height: 100vh;  /* Full viewport height */
-  width: 100%;    /* Ensure it spans full width */
+.app-container {         /* Create a flex container */
+  height: 100vh;  
+  width:100%; 
+    display:flex;
+    align-items:start;
+    flex-direction: row;      /* Full viewport height */
 }
 
-/* Sidebar: Fixed width */
-.sidebar {
-  width: 250px;   /* Sidebar width */
-  background-color: #f1a619;
+.sidebar-container {
+  width: 250px;           /* Fixed width for the sidebar */
 }
 
-/* Main content area: it should expand to fill the remaining space */
 .main-content {
-  flex-grow: 1;   /* Take up remaining space next to the sidebar */
+  padding-left: 25px;
+  flex-grow: 1;           /* Main content grows to take up remaining space */
   padding: 20px;
   background-color: white;
-  overflow-y: auto;  /* Allow scrolling if content overflows */
+  width: calc(100% - 250px);
+  /* margin-left: 250px; */
 }
 
 /* Optional styles */
