@@ -1,96 +1,92 @@
-/* General Styles for Login Page */
-
-
-.Login-box {
-    display: flex;
-    width: 60%;
-    height: 60%;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-/* Left panel (form section) */
-.Login-header {
-    width: 50%;
-    padding: 30px;
+/* Container for the entire login form */
+.login-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-}
-
-.Login-header header {
+    height: 100vh;
+    background-color: #f4f9ff; /* Light blue background */
+  }
+  
+  /* Header styling */
+  .login-header h2 {
     font-size: 2rem;
     font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.input-box {
-    margin-bottom: 20px;
-}
-
-.input-field {
+    color: #f1a619; /* Teal color for the header */
+    margin-bottom: 1rem;
+  }
+  
+  /* Styling for the login form */
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Input fields */
+  .input-field {
     width: 100%;
-    padding: 15px;
-    margin: 5px 0;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
     font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.submit-btn {
+    background-color: #f4f9ff;
+  }
+  
+  /* Styling for the 'Forgot password?' link */
+  .forgot-password {
+    align-self: flex-end;
+    margin-bottom: 1rem;
+    color: #f1a619;
+    text-decoration: none;
+    font-size: 0.875rem;
+  }
+  
+  .forgot-password:hover {
+    text-decoration: underline;
+  }
+  
+  /* Login button */
+  .login-button {
     width: 100%;
-    padding: 15px;
-    background-color: #32b490;
+    padding: 0.75rem;
+    background-color: #f1a619;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
+    cursor: pointer;
     font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.submit-btn:hover {
-    background-color: #28a075;
-}
-
-/* Temporary buttons for Lecturer and Student */
-.temporary-buttons {
+  }
+  
+  .login-button:hover {
+    background-color: #ad7712; /* Darker shade on hover */
+  }
+  
+  /* Temporary buttons for student and lecturer */
+  .temp-buttons {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.lecturer, .student {
-    padding: 10px 20px;
-    border: 1px solid #32b490;
-    background-color: transparent;
-    color: #32b490;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    width: 48%;
-    text-align: center;
-}
-
-.lecturer:hover, .student:hover {
-    background-color: #32b490;
+    justify-content: space-around;
+    margin-top: 2rem;
+    width: 100%;
+  }
+  
+  .student-btn, .lecturer-btn {
+    padding: 0.5rem 1rem;
+    background-color: #f1a619;
     color: white;
-}
-
-/* Right panel (illustration) */
-.right-panel {
-    width: 50%;
-    background: linear-gradient(135deg, #32b490, #6fd5cf);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-.right-panel img {
-    width: 80%;
-}
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .student-btn:hover, .lecturer-btn:hover {
+    background-color: #ad7712; /* Darker shade on hover */
+  }
+  
