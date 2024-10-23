@@ -1,0 +1,41 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    height: 100%;  /* Ensure full height for proper layout */
+  }
+  
+  /* Flexbox container for the sidebar and main content */
+  .app-container {  
+    display: flex;
+    height: 100vh;   /* Full viewport height */
+  }
+  
+  .sidebar-container {
+    width: 250px;
+    position: fixed;     /* Fix the sidebar to the left */
+    height: 100vh;       /* Full height for the sidebar */
+    background-color: #282c34; /* Optional: Add a background color for the sidebar */
+  }
+  
+  .main-content {
+    margin-left: 250px;  /* Leave space for the fixed sidebar */
+    padding: 20px;
+    width: calc(100% - 250px); /* Adjust width for the remaining space */
+    overflow-y: auto;     /* Allow vertical scrolling for the main content */
+    height: 100vh;        /* Full height for the main content */
+    background-color: white;
+  }
+  
+  @media (max-width: 768px) {
+    .sidebar-container {
+      width: 200px;  /* Adjust sidebar width for smaller screens */
+    }
+  
+    .main-content {
+      margin-left: 200px;
+      width: calc(100% - 200px);
+    }
+  }
+  
