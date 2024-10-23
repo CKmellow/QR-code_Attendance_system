@@ -1,6 +1,7 @@
 // src/components/LecView/LecDash.js
 import React from 'react';
 import './LecDash.css';  // Link to CSS file for LecDash
+import './LecAttendance.js';
 
 const classes = [
   { id: 1, name: 'Math 101', students: 25 },
