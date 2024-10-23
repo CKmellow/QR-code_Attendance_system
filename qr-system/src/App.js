@@ -1,17 +1,17 @@
 import React from 'react';
-import Sidebar from './components/Sidebar';
-import LecDash from './components/LecView/LecDash';  // Import LecDash component
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import LoginPage from './Pages/LoginPage';
+import LecHome from './Pages/LecHome';
 
 function App() {
-  return (
-    <div className="app-container">  {/* Flex container for sidebar and main content */}
-      <div className="sidebar-container">  
-        <Sidebar />  
-      </div>
-      <div className="main-content">  
-        <LecDash />  
-      </div>
-    </div>
+  return(
+    <Router>
+    <Routes>
+
+      <Route path='/'element={<LoginPage />} />
+      <Route path='/lec-home'element={<LecHome />} />
+    </Routes>
+    </Router>
   );
 }
 
