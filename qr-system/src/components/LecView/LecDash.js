@@ -11,10 +11,10 @@ const classes = [
   { id: 6, name: 'English Literature 101', students: 18 },
   { id: 7, name: 'Computer Science 101', students: 35 },
   { id: 8, name: 'Philosophy 101', students: 15 },
-  // { id: 9, name: 'Art History 101', students: 12 },
-  // { id: 10, name: 'Sociology 101', students: 24 },
-  // { id: 11, name: 'Economics 301', students: 40 },
-  // { id: 12, name: 'Environmental Science 101', students: 20 },
+  { id: 9, name: 'Art History 101', students: 12 },
+  { id: 10, name: 'Sociology 101', students: 24 },
+  { id: 11, name: 'Economics 301', students: 40 },
+  { id: 12, name: 'Environmental Science 101', students: 20 },
 ];  // More example class data
 
 const LecDash = () => {
