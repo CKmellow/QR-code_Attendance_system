@@ -1,36 +1,87 @@
 // src/components/LecView/LecDash.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './LecDash.css';  // Link to CSS file for LecDash
-import './LecAttendance.js';
-
-const classes = [
-  { id: 1, name: 'Math 101', students: 25 },
-  { id: 2, name: 'History 201', students: 30 },
-  { id: 3, name: 'Physics 301', students: 20 },
-  { id: 4, name: 'Chemistry 101', students: 28 },
-  { id: 5, name: 'Biology 201', students: 22 },
-  { id: 6, name: 'English Literature 101', students: 18 },
-  { id: 7, name: 'Computer Science 101', students: 35 },
-  { id: 8, name: 'Philosophy 101', students: 15 },
-  { id: 9, name: 'Art History 101', students: 12 },
-  { id: 10, name: 'Sociology 101', students: 24 },
-  { id: 11, name: 'Economics 301', students: 40 },
-  { id: 12, name: 'Environmental Science 101', students: 20 },
-];  // More example class data
+import AttendanceView from './AttendanceView'; // Import the new AttendanceView component
 
 const LecDash = () => {
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedClass, setSelectedClass] = useState(null); // To hold the selected class
+  const [viewingAttendance, setViewingAttendance] = useState(false); // To control viewing state
+
+  // Example class data
+  const classes = [
+    { id: 1, name: 'Math 101' },
+    { id: 2, name: 'History 201' },
+    { id: 3, name: 'Physics 301' },
+    { id: 4, name: 'Chemistry 101' },
+    { id: 5, name: 'Biology 201' },
+    { id: 6, name: 'English Literature 101' },
+    { id: 7, name: 'Computer Science 101' },
+    { id: 8, name: 'Philosophy 101' },
+    { id: 9, name: 'Art History 101' },
+    { id: 10, name: 'Sociology 101' },
+    { id: 11, name: 'Economics 301' },
+    { id: 12, name: 'Environmental Science 101' },
+  ];
+
+  // Fetch attendance data when the component mounts
+  useEffect(() => {
+    const fetchAttendance = async () => {
+      try {
+        const response = await fetch('/api/attendance'); // Adjust to your API endpoint
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setAttendanceData(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAttendance();
+  }, []);
+
+  const handleViewClass = (classId) => {
+    setSelectedClass(classId);
+    setViewingAttendance(true);
+  };
+
+  if (loading) {
+    return <div>Loading attendance data...</div>;
+  }
+
+  if (error) {
+    return <div>Error fetching attendance data: {error}</div>;
+  }
+
+  if (viewingAttendance) {
+    const classAttendance = attendanceData.filter(student => student.classId === selectedClass);
+    const className = classes.find(classItem => classItem.id === selectedClass)?.name;
+
+    return (
+      <AttendanceView className={className} attendanceData={classAttendance} />
+    );
+  }
+
   return (
     <div className="dashboard-container">
       <div className="dash">
-      <h2>Dashboard</h2>
+        <h2>Dashboard</h2>
       </div>
       
       <div className="class-grid">
         {classes.map((classItem) => (
           <div key={classItem.id} className="class-tile">
             <h3>{classItem.name}</h3>
-            <p>Students: {classItem.students}</p>
-            <button className="view-class-button">View Class</button>  {/* Handle navigation */}
+            <p>Students: {attendanceData.filter(student => student.classId === classItem.id).length}</p>
+            <button className="view-class-button" onClick={() => handleViewClass(classItem.id)}>
+              View Class
+            </button>
           </div>
         ))}
       </div>
