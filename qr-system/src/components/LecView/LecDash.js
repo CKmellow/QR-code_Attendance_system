@@ -22,7 +22,7 @@ const LecDash = () => {
   return (
     <div className="dashboard-container">
       <div className="dash">
-      <h2>Dashboard</h2>
+      <h2>Classes</h2>
       </div>
       
       <div className="class-grid">

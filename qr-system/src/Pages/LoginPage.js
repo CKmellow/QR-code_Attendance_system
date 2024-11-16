@@ -8,6 +8,9 @@ function LoginPage() {
   const handleLectureClick=()=>{
     navigate('/lec-home' );
   }
+  const handleStudentClick=()=>{
+    navigate('/stu-home');
+  }
   return (
     <div className="login-container">
       <div className="login-header">
@@ -20,7 +23,7 @@ function LoginPage() {
         <button className="login-button">Login</button>
       </form>
       <div className="temp-buttons">
-        <button className="student-btn" >Student Login</button>
+        <button className="student-btn" onClick={handleStudentClick}>Student Login</button>
         <button className="lecturer-btn"  onClick={handleLectureClick}>Lecturer Login</button>
       </div>
     </div>
