@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 
 const LoginPage = () => {
-    const [id, setId] = useState('');
+    const [_id, setId] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const loginData = { id, password };
+        const loginData = { _id, password };
 
         try {
             const response = await fetch('http://localhost:5000/login', {
@@ -49,7 +49,7 @@ example lec data: id:234567 password:password123
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
-                    value={id}
+                    value={_id}
                     onChange={(e) => setId(e.target.value)}
                     placeholder="Enter ID"
                     required
