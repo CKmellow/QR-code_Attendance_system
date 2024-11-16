@@ -1,5 +1,5 @@
 Created by:
-Kevin KAniaru
+Kevin Kaniaru
 Cyprian Kamau
 Joy Wanjohi
 Corban Mark Odhiambo
