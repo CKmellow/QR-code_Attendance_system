@@ -46,7 +46,7 @@ input[type="text"], input[type="password"] {
 button[type="submit"] {
   width: 100%;
   padding: 0.75rem;
-  background-color: #f1a619; /* Yellow-orange button */
+  background-color: #BFA46A; /* Yellow-orange button */
   color: white;
   border: none;
   border-radius: 6px;
@@ -56,7 +56,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-  background-color: #ad7712; /* Darker shade on hover */
+  background-color: #885f12; /* Darker shade on hover */
 }
 
 /* Error message styling */

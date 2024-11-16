@@ -39,7 +39,10 @@ const LoginPage = () => {
             setErrorMessage('Server error. Please try again later.');
         }
     };
-
+/*
+example student data: id:164806 password:password123
+example lec data: id:234567 password:password123
+*/
     return (
         <div className="login-container">
             <h2>Login</h2>

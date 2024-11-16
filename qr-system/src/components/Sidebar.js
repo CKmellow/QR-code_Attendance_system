@@ -12,7 +12,7 @@ const Sidebar = () => {
             <nav className="sidebar-nav">
                 {/* Display the user's name */}
                 <div className="sidebar-greeting">
-                    Hello, {user?.fname} {user?.lname}
+                    Hello, {user?.fname} {user?.lname} 👋
                 </div>
             </nav>
 
