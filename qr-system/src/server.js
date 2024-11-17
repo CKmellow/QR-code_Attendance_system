@@ -7,7 +7,7 @@ const app = express();
 const port = 5000;
 
 // Middleware
-app.use(cors()); 
+app.use(cors());
 app.use(express.json());
 app.use(cors({ origin: 'http://localhost:3000' })); // Allow requests from frontend
 
@@ -15,7 +15,7 @@ app.use(cors({ origin: 'http://localhost:3000' })); // Allow requests from front
 const uri = "mongodb+srv://admin:strathmoreqrcode@cluster0.60o6t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 const client = new MongoClient(uri);
 
-// Connect to the MongoDB database with error handling
+// Connect to the MongoDB database
 async function connectToDb() {
   try {
     await client.connect();
@@ -27,8 +27,31 @@ async function connectToDb() {
     throw new Error('Failed to connect to the database');
   }
 }
+async function hashExistingPasswords() {
+  const db = await connectToDb();
+  const usersCollection = db.collection("users");
+  const users = await usersCollection.find({}).toArray();
 
-// POST route for login (unchanged)
+  for (const user of users) {
+    // Skip users whose passwords are already hashed
+    if (!user.password || user.password.startsWith('$2b$')) {
+      continue;
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    
+    // Update the user's password in the database with the hashed password
+    await usersCollection.updateOne(
+      { _id: user._id },
+      { $set: { password: hashedPassword } }
+    );
+
+    console.log(`Password hashed for user ID: ${user._id}`);
+  }
+}
+hashExistingPasswords()
+// POST route for login
 app.post('/login', async (req, res) => {
   const { _id, password } = req.body;
 
@@ -38,19 +61,23 @@ app.post('/login', async (req, res) => {
 
   try {
     const db = await connectToDb();
-    const collection = db.collection("users");
+    const usersCollection = db.collection("users");
 
-    const user = await collection.findOne({ _id:_id });
+    // Find the user by ID
+    const user = await usersCollection.findOne({ _id: _id });
 
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
+    const storedpass=user.password;
 
+    console.log("Stored hashed password =" + user.password);
     const isMatch = await bcrypt.compare(password, user.password);
-
+    console.log(isMatch);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials." });
     }
+    
 
     res.status(200).json({
       message: "Login successful.",
@@ -67,6 +94,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
+
 // GET route for a lecturer to view their classes
 app.get('/lecturer/classes/:lecturerId', async (req, res) => {
   const { lecturerId } = req.params;
@@ -75,7 +103,7 @@ app.get('/lecturer/classes/:lecturerId', async (req, res) => {
     const db = await connectToDb();
     const classesCollection = db.collection("classes");
 
-    const classes = await classesCollection.find({ lecturerId:lecturerId }).toArray();
+    const classes = await classesCollection.find({ lecturerId }).toArray();
 
     if (classes.length === 0) {
       return res.status(404).json({ message: "No classes found for this lecturer." });
@@ -185,7 +213,6 @@ app.post('/add-class', async (req, res) => {
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 });
-
 
 // Start the server
 app.listen(port, () => {
