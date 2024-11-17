@@ -6,6 +6,7 @@ import './Sidebar.css';
 const Sidebar = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
+  
   return (
 
     <div className="sidebar">
