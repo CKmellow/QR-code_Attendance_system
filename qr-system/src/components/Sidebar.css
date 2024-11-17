@@ -1,6 +1,6 @@
 /* Sidebar styling */
 .sidebar {
-  background-color: #f1a619;
+  background-color: #BFA46A;
   color: white;
   width: 250px;
   height: 100vh;
@@ -53,62 +53,3 @@
   padding: 10px 0;
 }
 
-/* Add class modal form styling */
-.add-class-form-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 400px;
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-}
-
-.add-class-form {
-  text-align: center;
-}
-
-.add-class-form h2 {
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.add-class-form input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.add-class-form button {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0;
-  font-size: 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.add-class-form button[type="submit"] {
-  background-color: #f1a619;
-  color: white;
-}
-
-.add-class-form button[type="submit"]:hover {
-  background-color: #d48a0c;
-}
-
-.add-class-form .cancel-button {
-  background-color: #ccc;
-  color: black;
-}
-
-.add-class-form .cancel-button:hover {
-  background-color: #999;
-}

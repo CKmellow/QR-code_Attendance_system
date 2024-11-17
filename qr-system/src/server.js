@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const { MongoClient, ObjectId } = require('mongodb');
+const crypto = require("crypto");
 const cors = require('cors');
 
 const app = express();
@@ -34,7 +35,7 @@ async function hashExistingPasswords() {
 
   for (const user of users) {
     // Skip users whose passwords are already hashed
-    if (!user.password || user.password.startsWith('$2b$')) {
+    if (!user.password || user.password.startsWith('$2a$')) {
       continue;
     }
 
@@ -97,21 +98,20 @@ app.post('/login', async (req, res) => {
 
 // GET route for a lecturer to view their classes
 app.get('/lecturer/classes/:lecturerId', async (req, res) => {
-  const { lecturerId } = req.params;
+  const lecturerId = req.params.lecturerId;
+  console.log("Lecturer ID from URL:", lecturerId);  // Log the lecturerId
 
   try {
     const db = await connectToDb();
-    const classesCollection = db.collection("classes");
+    const courses = await db.collection("courses").find({ lecturerId }).toArray();
+    console.log("Courses Retrieved:", courses);  // Log the courses retrieved
 
-    const classes = await classesCollection.find({ lecturerId }).toArray();
-
-    if (classes.length === 0) {
+    if (courses.length === 0) {
       return res.status(404).json({ message: "No classes found for this lecturer." });
     }
-
-    res.status(200).json(classes);
+    res.status(200).json(courses);
   } catch (error) {
-    console.error("Error retrieving classes for lecturer:", error);
+    console.error("Error retrieving courses:", error);  // Log any errors
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 });
@@ -122,20 +122,24 @@ app.get('/student/classes/:studentId', async (req, res) => {
 
   try {
     const db = await connectToDb();
-    const usersCollection = db.collection("users");
 
-    const student = await usersCollection.findOne({ _id: studentId });
+    // Query to find courses where the studentId exists in the `students` array
+    const courses = await db
+      .collection("courses")
+      .find({ studentIds: studentId })
+      .toArray();
 
-    if (!student) {
-      return res.status(404).json({ message: "Student not found." });
+    if (courses.length === 0) {
+      return res.status(404).json({ message: "No classes found for this student." });
     }
 
-    res.status(200).json(student.courses);
+    res.status(200).json(courses);
   } catch (error) {
-    console.error("Error retrieving student classes:", error);
+    console.error("Error retrieving student's classes:", error);
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 });
+
 
 // GET route for a lecturer to view students and attendance in a specific class
 app.get('/lecturer/attendance/:classId', async (req, res) => {
@@ -177,7 +181,7 @@ async function connectToClassesDb() {
     if (!classesCollection) {
       await client.connect();
       const db = client.db("qrcodeAttendance");
-      classesCollection = db.collection("classes");
+      coursesCollection = db.collection("courses");
       console.log('Classes collection ready');
     }
   } catch (error) {
@@ -187,32 +191,89 @@ async function connectToClassesDb() {
 }
 
 // POST route for adding a new class
-app.post('/add-class', async (req, res) => {
-  const { className, instructorId } = req.body;
+app.post("/add-class", async (req, res) => {
+  const { courseName, lecturerId } = req.body; // Match the key from the frontend
 
-  if (!className || !instructorId) {
-    return res.status(400).json({ message: "Class name and instructor ID are required." });
+  // Validate the request body
+  if (!courseName || !lecturerId) {
+    return res.status(400).json({ message: "Course name and lecturer ID are required." });
   }
 
   try {
-    await connectToClassesDb();
+    const db = await connectToDb(); // Connect to the database
+    if (!db) {
+      return res.status(500).json({ message: "Database connection failed." });
+    }
+
+    const coursesCollection = db.collection("courses");
+
+    // Generate a unique 7-character alphanumeric ID for the class
+    let uniqueId;
+    do {
+      uniqueId = crypto.randomBytes(4).toString("hex").substring(0, 7); // Generate 7-character key
+    } while (await coursesCollection.findOne({ _id: uniqueId })); // Ensure uniqueness
+
+    // Create a new class object
+    const newClass = {
+      _id: uniqueId, // Generated unique ID
+      courseName, // Set course name
+      lecturerId, // Assign the lecturer ID
+      numOfStudents: 0, // Default student count
+      studentIds: [], // Initialize with an empty array for student IDs
+      createdAt: new Date(), // Timestamp
+    };
 
     // Insert the new class into the collection
-    const result = await classesCollection.insertOne({
-      className,
-      instructorId,
-      createdAt: new Date(),
-    });
+    await coursesCollection.insertOne(newClass);
 
     res.status(201).json({
       message: "Class added successfully.",
-      classId: result.insertedId,
+      class: newClass, // Return the newly created class
     });
   } catch (error) {
     console.error("Error adding class:", error);
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 });
+
+app.post("/join-class", async (req, res) => {
+  const { courseId, studentId } = req.body;
+
+  // Validate the request body
+  if (!courseId || !studentId) {
+    return res
+      .status(400)
+      .json({ message: "Course ID and student ID are required." });
+  }
+
+  try {
+    const db = await connectToDb();
+    const coursesCollection = db.collection("courses");
+
+    // Find the course
+    const course = await coursesCollection.findOne({ _id: courseId });
+    if (!course) {
+      return res.status(404).json({ message: "Course not found." });
+    }
+
+    // Check if the student is already enrolled
+    if (course.studentIds.includes(studentId)) {
+      return res.status(400).json({ message: "You are already in this class." });
+    }
+
+    // Add the student to the course
+    await coursesCollection.updateOne(
+      { _id: courseId },
+      { $push: { studentIds: studentId }, $inc: { numOfStudents: 1 } }
+    );
+
+    res.status(200).json({ message: "Successfully joined the class." });
+  } catch (error) {
+    console.error("Error joining class:", error);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+});
+
 
 // Start the server
 app.listen(port, () => {

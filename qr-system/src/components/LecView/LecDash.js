@@ -1,36 +1,49 @@
-// src/components/LecView/LecDash.js
-import React from 'react';
-import './LecDash.css';  // Link to CSS file for LecDash
-import './LecAttendance.js';
-
-const classes = [
-  { id: 1, name: 'Math 101', students: 25 },
-  { id: 2, name: 'History 201', students: 30 },
-  { id: 3, name: 'Physics 301', students: 20 },
-  { id: 4, name: 'Chemistry 101', students: 28 },
-  { id: 5, name: 'Biology 201', students: 22 },
-  { id: 6, name: 'English Literature 101', students: 18 },
-  { id: 7, name: 'Computer Science 101', students: 35 },
-  { id: 8, name: 'Philosophy 101', students: 15 },
-  { id: 9, name: 'Art History 101', students: 12 },
-  { id: 10, name: 'Sociology 101', students: 24 },
-  { id: 11, name: 'Economics 301', students: 40 },
-  { id: 12, name: 'Environmental Science 101', students: 20 },
-];  // More example class data
+import React, { useEffect, useState } from 'react';
+import './LecDash.css';
 
 const LecDash = () => {
+  const [classes, setClasses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const user = JSON.parse(localStorage.getItem('user'));
+  const lecturerId = user._id; 
+  console.log(`Lecturer ID received: ${lecturerId}`);
+
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        // Make sure to correctly use the template literal with backticks
+        const response = await fetch(`http://localhost:5000/lecturer/classes/${lecturerId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch classes');
+        }
+        const data = await response.json();
+        setClasses(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchClasses();
+  }, [lecturerId]);
+
+  if (loading) return <p>Loading classes...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <div className="dashboard-container">
       <div className="dash">
-      <h2>Classes</h2>
+        <h2>Classes</h2>
       </div>
-      
       <div className="class-grid">
         {classes.map((classItem) => (
-          <div key={classItem.id} className="class-tile">
-            <h3>{classItem.name}</h3>
-            <p>Students: {classItem.students}</p>
-            <button className="view-class-button">View Class</button>  {/* Handle navigation */}
+          <div key={classItem._id} className="class-tile">
+            <h3>{classItem.name || classItem.courseName}</h3>
+            <p>Students: {classItem.studentCount || classItem.numOfStudents || 'N/A'}</p>
+            <button className="view-class-button">View Class</button>
           </div>
         ))}
       </div>

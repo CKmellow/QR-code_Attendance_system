@@ -1,44 +1,54 @@
-import React from 'react';
-import './StuDash.css';  
+import React, { useEffect, useState } from 'react';
+import './StuDash.css';
+
+const StuDash = () => {
+  const [classes, setClasses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const user = JSON.parse(localStorage.getItem('user'));
+  const studentId = user._id; 
+  console.log(`Lecturer ID received: ${studentId}`);
 
 
-const classes = [
-    { id: 1, name: 'Math 101', hourspresent: 25, hoursabsent: 2 },
-    { id: 2, name: 'Physics 101', hourspresent: 30, hoursabsent: 4 },
-    { id: 3, name: 'Chemistry 101', hourspresent: 22, hoursabsent: 1 },
-    { id: 4, name: 'History 101', hourspresent: 28, hoursabsent: 3 },
-    { id: 5, name: 'Biology 101', hourspresent: 20, hoursabsent: 5 },
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        // Make sure to correctly use the template literal with backticks
+        const response = await fetch(`http://localhost:5000/student/classes/${studentId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch classes');
+        }
+        const data = await response.json();
+        setClasses(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  
-];  // More example class data
+    fetchClasses();
+  }, [studentId]);
 
-const StudentDash = () => {
+  if (loading) return <p>Loading classes...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <div className="dashboard-container">
       <div className="dash">
-      <h2>Classes</h2>
+        <h2>Classes</h2>
       </div>
-      
       <div className="class-grid">
-        {classes.map((classItem) => {
-        // Calculate absent percentage dynamically
-         const totalHours = classItem.hourspresent + classItem.hoursabsent;
-        const absentPercentage = ((classItem.hoursabsent / totalHours) * 100).toFixed(2);
-
-    return (
-      <div key={classItem.id} className="class-tile">
-        <h3>{classItem.name}</h3>
-        <p>Hours Present: {classItem.hourspresent}</p>
-        <p>Hours Absent: {classItem.hoursabsent}</p>
-        <p id="percentage">Percentage Absent: {absentPercentage}%</p>
-        <button className="view-class-button">View Class</button> {/* Handle navigation */}
+        {classes.map((classItem) => (
+          <div key={classItem._id} className="class-tile">
+            <h3>{classItem.name || classItem.courseName}</h3>
+            <p>Students: {classItem.studentCount || classItem.numOfStudents || 'N/A'}</p>
+            <button className="view-class-button">View Class</button>
+          </div>
+        ))}
       </div>
-    );
-  })}
-</div>
-
     </div>
   );
 };
 
-export default StudentDash;
+export default StuDash;
