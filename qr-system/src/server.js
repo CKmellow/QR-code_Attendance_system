@@ -141,6 +141,52 @@ app.get('/lecturer/attendance/:classId', async (req, res) => {
   }
 });
 
+// MongoDB collection for classes
+let classesCollection;
+
+async function connectToClassesDb() {
+  try {
+    if (!classesCollection) {
+      await client.connect();
+      const db = client.db("qrcodeAttendance");
+      classesCollection = db.collection("classes");
+      console.log('Classes collection ready');
+    }
+  } catch (error) {
+    console.error('Error connecting to classes collection:', error);
+    throw new Error('Failed to connect to the classes collection');
+  }
+}
+
+// POST route for adding a new class
+app.post('/add-class', async (req, res) => {
+  const { className, instructorId } = req.body;
+
+  if (!className || !instructorId) {
+    return res.status(400).json({ message: "Class name and instructor ID are required." });
+  }
+
+  try {
+    await connectToClassesDb();
+
+    // Insert the new class into the collection
+    const result = await classesCollection.insertOne({
+      className,
+      instructorId,
+      createdAt: new Date(),
+    });
+
+    res.status(201).json({
+      message: "Class added successfully.",
+      classId: result.insertedId,
+    });
+  } catch (error) {
+    console.error("Error adding class:", error);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+});
+
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

@@ -2,6 +2,7 @@ import React from "react";
 import '../Pages/LecHome.css';
 import LecDash from "../components/LecView/LecDash";
 import Sidebar from "../components/Sidebar";
+import QRCodeGenerator from "../components/LecView/QRCodeGenerator"
 
 function LecHome() {
     return (
@@ -11,6 +12,7 @@ function LecHome() {
           </div>
           <div className="main-content">  
             <LecDash />  
+            <QRCodeGenerator/>
           </div>
         </div>
       );

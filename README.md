@@ -1,5 +1,9 @@
-# QR-code_Attendance_system
-
-Here is a screenshot of the student dashboard
-
-![A screenshot of the student dashboard](https://github.com/CKmellow/QR-code_Attendance_system/blob/main/image.png)
+Created by:
+Kevin Kaniaru
+Cyprian Kamau
+Joy Wanjohi
+Corban Mark Odhiambo
+Ryan Rob Matu
+Elui Obosi
+Alex Musyoki
+Daud Hanif
