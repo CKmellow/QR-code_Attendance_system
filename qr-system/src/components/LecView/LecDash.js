@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './LecDash.css';
 
 const LecDash = () => {
@@ -9,11 +10,11 @@ const LecDash = () => {
   const lecturerId = user._id; 
   console.log(`Lecturer ID received: ${lecturerId}`);
 
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        // Make sure to correctly use the template literal with backticks
         const response = await fetch(`http://localhost:5000/lecturer/classes/${lecturerId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch classes');
@@ -30,6 +31,11 @@ const LecDash = () => {
     fetchClasses();
   }, [lecturerId]);
 
+  const handleViewClass = (courseId) => {
+    // Navigate to the class details page with the class ID
+    navigate(`/class-details/lecturer/${courseId}`);
+  };
+
   if (loading) return <p>Loading classes...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -43,7 +49,7 @@ const LecDash = () => {
           <div key={classItem._id} className="class-tile">
             <h3>{classItem.name || classItem.courseName}</h3>
             <p>Students: {classItem.studentCount || classItem.numOfStudents || 'N/A'}</p>
-            <button className="view-class-button">View Class</button>
+            <button className="view-class-button" onClick={() => handleViewClass(classItem._id)}>View Class</button>
           </div>
         ))}
       </div>
