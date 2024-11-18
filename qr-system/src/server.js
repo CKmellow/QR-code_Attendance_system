@@ -123,7 +123,7 @@ app.get('/student/classes/:studentId', async (req, res) => {
   try {
     const db = await connectToDb();
 
-    // Query to find courses where the studentId exists in the `students` array
+    // Query to find courses where the studentId exists in the students array
     const courses = await db
       .collection("courses")
       .find({ studentIds: studentId })
@@ -173,22 +173,8 @@ app.get('/lecturer/attendance/:classId', async (req, res) => {
   }
 });
 
-// MongoDB collection for classes
-let classesCollection;
 
-async function connectToClassesDb() {
-  try {
-    if (!classesCollection) {
-      await client.connect();
-      const db = client.db("qrcodeAttendance");
-      coursesCollection = db.collection("courses");
-      console.log('Classes collection ready');
-    }
-  } catch (error) {
-    console.error('Error connecting to classes collection:', error);
-    throw new Error('Failed to connect to the classes collection');
-  }
-}
+
 
 // POST route for adding a new class
 app.post("/add-class", async (req, res) => {
