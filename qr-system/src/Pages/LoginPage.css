@@ -65,3 +65,57 @@ button[type="submit"]:hover {
   font-size: 0.9rem;
   margin-top: 1rem;
 }
+
+/* Tabs for toggling */
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #333;
+  transition: border-bottom 0.3s ease, color 0.3s ease;
+}
+
+.tab.active {
+  color: #BFA46A;
+  border-bottom: 2px solid #BFA46A;
+}
+
+/* Styling for the dropdown (role select) */
+select {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #f4f9ff;
+  color: #333; /* Text color */
+  appearance: none; /* Remove default dropdown arrow for consistency across browsers */
+  -webkit-appearance: none; /* WebKit-specific */
+  -moz-appearance: none; /* Mozilla-specific */
+  background-image: url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'><path fill='%23333' d='M0 0l5 6 5-6z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+}
+
+/* Dropdown hover and focus states */
+select:focus,
+select:hover {
+  border-color: #BFA46A;
+  outline: none;
+}
+
+/* For alignment with the placeholder text */
+select option {
+  color: #333;
+}
+
+
