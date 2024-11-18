@@ -6,7 +6,7 @@ const LoginPage = () => {
   const [_id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [showSignup, setShowSignup] = useState(false); // Toggle between login and signup
+  const [isLogin, setIsLogin] = useState(true); // Toggle between login and signup
   const [signupData, setSignupData] = useState({
     fname: '',
     lname: '',
@@ -62,7 +62,7 @@ const LoginPage = () => {
 
       if (response.status === 201) {
         setErrorMessage('Signup successful! You can now log in.');
-        setShowSignup(false);
+        setIsLogin(true); // Switch to login view
       } else {
         setErrorMessage(data.message);
       }
@@ -74,8 +74,24 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
-      <h2>{showSignup ? 'Signup' : 'Login'}</h2>
-      {!showSignup ? (
+      {/* Tabs for toggling between Login and Signup */}
+      <div className="tabs">
+        <div
+          className={`tab ${isLogin ? 'active' : ''}`}
+          onClick={() => setIsLogin(true)}
+        >
+          Login
+        </div>
+        <div
+          className={`tab ${!isLogin ? 'active' : ''}`}
+          onClick={() => setIsLogin(false)}
+        >
+          Signup
+        </div>
+      </div>
+
+      <h2>{isLogin ? 'Login' : 'Signup'}</h2>
+      {isLogin ? (
         <form onSubmit={handleLogin}>
           <input
             type="text"
@@ -136,12 +152,6 @@ const LoginPage = () => {
         </form>
       )}
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-      <button
-        className="toggle-button"
-        onClick={() => setShowSignup(!showSignup)}
-      >
-        {showSignup ? 'Go to Login' : 'Go to Signup'}
-      </button>
     </div>
   );
 };
