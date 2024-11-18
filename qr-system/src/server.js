@@ -343,6 +343,46 @@ app.get('/class/details/lecturer/:courseId', async (req, res) => {
   }
 });
 
+// POST route for signup
+app.post('/signup', async (req, res) => {
+  const { fname, lname, _id, password, role } = req.body;
+
+  if (!fname || !lname || !_id || !password || !role) {
+    return res.status(400).json({ message: 'All fields are required.' });
+  }
+
+  try {
+    const db = await connectToDb();
+    const usersCollection = db.collection('users');
+
+    // Check if user already exists
+    const existingUser = await usersCollection.findOne({ _id });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User with this ID already exists.' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user object
+    const newUser = {
+      _id,
+      fname,
+      lname,
+      password: hashedPassword,
+      role,
+    };
+
+    // Insert the new user into the database
+    await usersCollection.insertOne(newUser);
+
+    res.status(201).json({ message: 'Signup successful!' });
+  } catch (error) {
+    console.error('Error during signup:', error);
+    res.status(500).json({ message: 'Server error. Please try again later.' });
+  }
+});
+
 
 // Start the server
 app.listen(port, () => {
