@@ -176,19 +176,7 @@ app.get('/lecturer/attendance/:classId', async (req, res) => {
 // MongoDB collection for classes
 let classesCollection;
 
-async function connectToClassesDb() {
-  try {
-    if (!classesCollection) {
-      await client.connect();
-      const db = client.db("qrcodeAttendance");
-      coursesCollection = db.collection("courses");
-      console.log('Classes collection ready');
-    }
-  } catch (error) {
-    console.error('Error connecting to classes collection:', error);
-    throw new Error('Failed to connect to the classes collection');
-  }
-}
+
 
 // POST route for adding a new class
 app.post("/add-class", async (req, res) => {
@@ -276,7 +264,7 @@ app.post("/join-class", async (req, res) => {
 // GET route to fetch class details with students and attendance information
 app.get('/class/details/lecturer/:courseId', async (req, res) => {
   console.log("Route hit for courseId:", req.params.courseId);
-  const { courseId } = req.params;  // courseId is a string
+  const { courseId } = req.params; // courseId is a string
 
   try {
     const db = await connectToDb();
@@ -288,14 +276,25 @@ app.get('/class/details/lecturer/:courseId', async (req, res) => {
       return res.status(404).json({ message: "Class not found." });
     }
 
-    console.log('Course:', course);  // Debug log course details
+    console.log('Course:', course); // Debug log course details
+
+    // If the class has no students, return an empty array for students
+    if (!course.studentIds || course.studentIds.length === 0) {
+      return res.status(200).json({
+        courseName: course.courseName,
+        courseId: course._id,
+        lecturerId: course.lecturerId,
+        numOfStudents: course.numOfStudents || 0,
+        students: [], // No students in the class
+      });
+    }
 
     // Fetch the students enrolled in the course using studentIds (strings)
     const students = await db.collection('users').find({
-      _id: { $in: course.studentIds }  // studentIds is an array of strings
+      _id: { $in: course.studentIds } // studentIds is an array of strings
     }).toArray();
 
-    console.log('Students:', students);  // Debug log students
+    console.log('Students:', students); // Debug log students
 
     if (students.length === 0) {
       return res.status(404).json({ message: "No students found for this course." });
@@ -304,41 +303,41 @@ app.get('/class/details/lecturer/:courseId', async (req, res) => {
     // Fetch the attendance records for the class
     console.log('Fetching attendance for courseId:', courseId);
     const attendanceRecords = await db.collection('attendance').aggregate([
-      { $match: { courseId } },  // Match documents by courseId
-      { $unwind: "$attendanceRecords" }  // Unwind the attendanceRecords array
+      { $match: { courseId } }, // Match documents by courseId
+      { $unwind: { path: "$attendanceRecords", preserveNullAndEmptyArrays: true } } // Allow empty attendanceRecords
     ]).toArray();
 
-    console.log('Attendance Records:', attendanceRecords);  // Debug log attendance records
+    console.log('Attendance Records:', attendanceRecords); // Debug log attendance records
 
-    if (attendanceRecords.length === 0) {
-      return res.status(404).json({ message: "No attendance records found for this course." });
+    // Map attendance records by student ID
+    const attendanceByStudentId = {};
+    if (attendanceRecords.length > 0) {
+      attendanceRecords.forEach(record => {
+        const studentId = record.studentId;
+        if (!attendanceByStudentId[studentId]) {
+          attendanceByStudentId[studentId] = [];
+        }
+        attendanceByStudentId[studentId].push(record.attendanceRecords);
+      });
     }
 
     // Format the attendance records for each student
     const studentsWithAttendance = students.map(student => {
-      console.log("Checking student:", student.fname, student.lname, "ID:", student._id);  // Log student details
+      console.log("Checking student:", student.fname, student.lname, "ID:", student._id); // Log student details
 
-      // Filter attendance records by matching student._id and studentId
-      const studentAttendance = attendanceRecords.filter(att => {
-        console.log("Comparing:", att.studentId, "with", student._id);  // Log comparison
-        return att.studentId === student._id;  // Both should be strings
-      });
-
-      console.log("Filtered attendance for student:", student.fname, student.lname, studentAttendance);  // Log filtered attendance
-
-      // Format attendance details for each student
-      const formattedAttendance = studentAttendance.map(record => ({
-        attendanceDate: record.attendanceRecords.attendanceDate,
-        classStartTime: record.attendanceRecords.classStartTime,
-        status: record.attendanceRecords.status,
-        hoursPresent: record.attendanceRecords.hoursPresent,
-        hoursAbsent: record.attendanceRecords.hoursAbsent,
-      }));
+      const formattedAttendance = attendanceByStudentId[student._id] || []; // Use empty array if no attendance
 
       return {
+        studentId: student._id,
         fname: student.fname,
         lname: student.lname,
-        attendance: formattedAttendance,
+        attendance: formattedAttendance.map(record => ({
+          attendanceDate: record?.attendanceDate || null,
+          classStartTime: record?.classStartTime || null,
+          status: record?.status || "no records",
+          hoursPresent: record?.hoursPresent || 0,
+          hoursAbsent: record?.hoursAbsent || 0,
+        })),
       };
     });
 
@@ -346,9 +345,11 @@ app.get('/class/details/lecturer/:courseId', async (req, res) => {
     const classDetails = {
       courseName: course.courseName,
       lecturerId: course.lecturerId,
-      numOfStudents: course.numOfStudents,  // Assuming numOfStudents is a number
+      courseId:course._id,
+      numOfStudents: course.numOfStudents, // Assuming numOfStudents is a number
       students: studentsWithAttendance,
     };
+    console.log(classDetails);
 
     res.status(200).json(classDetails);
   } catch (error) {
@@ -356,6 +357,9 @@ app.get('/class/details/lecturer/:courseId', async (req, res) => {
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 });
+
+
+
 
 
 // Start the server

@@ -1,0 +1,161 @@
+/* General container styling */
+.lecturer-class-details-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8f9fa; /* Light background */
+  color: #333; /* Dark text for contrast */
+  position: relative; /* Ensure correct positioning for children */
+}
+
+/* Sidebar styling */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px; /* Sidebar width */
+  height: 100vh; /* Full viewport height */
+  padding: 20px;
+  overflow-y: auto; /* Scroll if content overflows */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Content styling */
+.lecturer-class-details-content {
+  margin-left: 250px; /* Match sidebar width */
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+h2, h3 {
+  color: #495057; /* Darker text for headings */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th, table td {
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #dee2e6; /* Light border */
+}
+
+table th {
+  background-color: #f1f3f5; /* Light header background */
+}
+
+table tr:nth-child(even) {
+  background-color: #f8f9fa; /* Alternate row background */
+}
+
+/* Home button styling */
+.back-button {
+  width: 100px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: black; /* Blue */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  z-index: 100; /* Ensure it's above other content */
+}
+.generate {
+  width: 100px;
+  position: absolute;
+  top: 70px;
+  right: 20px;
+  background-color: black; /* Blue */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  z-index: 100; /* Ensure it's above other content */
+}
+
+
+
+
+/* Modal styling */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 600px;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+.details{
+  background-color: #BFA46A;
+}
+.details:hover{
+  background-color: #885f12;
+}
+
+.close-modal {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 10px;
+  cursor: pointer;
+  color: #495057;
+}
+
+.close-modal:hover {
+  color: #fff;
+  background-color: #000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px; /* Adjust sidebar width */
+  }
+
+  .lecturer-class-details-content {
+    margin-left: 200px; /* Match the new sidebar width */
+    padding: 15px;
+  }
+
+  .home-button {
+    top: 15px;
+    right: 15px;
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .modal-content {
+    width: 90%; /* Adjust modal width for smaller screens */
+  }
+}
