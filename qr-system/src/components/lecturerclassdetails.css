@@ -86,9 +86,6 @@ table tr:nth-child(even) {
   z-index: 100; /* Ensure it's above other content */
 }
 
-
-
-
 /* Modal styling */
 .modal {
   position: fixed;
@@ -112,10 +109,12 @@ table tr:nth-child(even) {
   position: relative;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
-.details{
+
+.details {
   background-color: #BFA46A;
 }
-.details:hover{
+
+.details:hover {
   background-color: #885f12;
 }
 
@@ -135,6 +134,39 @@ table tr:nth-child(even) {
 .close-modal:hover {
   color: #fff;
   background-color: #000;
+}
+
+/* Modal inputs and labels */
+.modal-content label {
+  font-size: 16px;
+  margin: 10px 0 5px;
+  font-weight: 600;
+  color: #495057;
+  width: 100%;
+}
+
+.modal-content input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.modal-content button.details {
+  width: 100%;
+  background-color: #BFA46A; /* Golden background */
+  color: white;
+  padding: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.modal-content button.details:hover {
+  background-color: #885f12; /* Darker golden on hover */
 }
 
 /* Responsive adjustments */
@@ -217,4 +249,106 @@ table tr:nth-child(even) {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.qr-actions button {
+  background-color: transparent; /* Transparent background */
+  color: #333; /* Default icon color */
+  border: none;
+  padding: 5px;
+  border-radius: 50%; /* Circle buttons */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.qr-actions button:hover {
+  background-color: #e0e0e0; /* Light gray on hover */
+  transform: scale(1.1); /* Slight zoom effect */
+}
+
+.qr-actions svg {
+  display: block;
+  margin: 0 auto;
+}
+
+.generate-icon {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.generate-icon:hover {
+  color: #0056b3;
+}
+
+.generate-icon:focus {
+  outline: none;
+}
+
+/* Container for the top bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f8f9fa; /* Optional background color */
+  border-bottom: 1px solid #ddd; /* Optional bottom border */
+}
+
+/* Styling for the home icon button */
+.home-icon {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.home-icon:hover {
+  color: #0056b3;
+}
+
+.home-icon:focus {
+  outline: none;
+}
+
+/* Styling for the QR code icon button */
+.generate-icon {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.generate-icon:hover {
+  color: #0056b3;
+}
+
+.generate-icon:focus {
+  outline: none;
+}
+
+.modal {
+  background-color: rgba(0, 0, 0, 0.5); /* Darker background */
+}
+
+.qr-modal-content {
+  width: 80%;
+  max-width: 600px;
 }
