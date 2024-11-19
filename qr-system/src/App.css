@@ -12,12 +12,7 @@ body, html {
   height: 100vh;   /* Full viewport height */
 }
 
-.sidebar-container {
-  width: 250px;
-  position: fixed;     /* Fix the sidebar to the left */
-  height: 100vh;       /* Full height for the sidebar */
-  background-color: #282c34; /* Optional: Add a background color for the sidebar */
-}
+
 
 .main-content {
   margin-left: 250px;  /* Leave space for the fixed sidebar */

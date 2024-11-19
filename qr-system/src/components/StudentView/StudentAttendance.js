@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import StuSidebar from './StuSidebar';
+import './StudentAttendance.css'
 
 const StudentAttendance = () => {
   const { courseId } = useParams();
@@ -40,41 +41,50 @@ const StudentAttendance = () => {
     return totalHours === 0 ? 0 : ((totalAbsent / totalHours) * 100).toFixed(2);
   };
 
-  if (error) return <p>{error}</p>;
-  if (!attendanceData) return <p>Loading...</p>;
+  if (error) return <div className="error-message">{error}</div>;
+  if (!attendanceData) return <div className="loading-message">Loading...</div>;
 
   const percentageAbsent = calculatePercentageAbsent(attendanceData.attendance);
 
   return (
-    <div>
-      <StuSidebar />
-      <button className="back-button" onClick={() => navigate('/stu-home')}>Home</button>
-      <button className="scan">Scan QR Code</button>
-      <h1>Attendance for {attendanceData.studentName}</h1>
-      <h2>Course: {attendanceData.courseName}</h2>
-      <h3>Percentage Absent: {percentageAbsent}%</h3>
-      <table border="1" cellPadding="10" cellSpacing="0">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Start Time</th>
-            <th>Status</th>
-            <th>Hours Present</th>
-            <th>Hours Absent</th>
-          </tr>
-        </thead>
-        <tbody>
-          {attendanceData.attendance.map((record, index) => (
-            <tr key={index}>
-              <td>{record.attendanceDate}</td>
-              <td>{record.classStartTime}</td>
-              <td>{record.status}</td>
-              <td>{record.hoursPresent}</td>
-              <td>{record.hoursAbsent}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="student-attendance-container">
+    <div className='stu-sidebar'> <StuSidebar /></div>
+     
+      <div className="attendance-main-content">
+        <div className="attendance-header">
+          <button className="back-button" onClick={() => navigate('/stu-home')}>
+            Home
+          </button>
+          <button className="scan-button">Scan QR Code</button>
+          <h1>Attendance for {attendanceData.studentName}</h1>
+          <h2>Course: {attendanceData.courseName}</h2>
+          <h3>Percentage Absent: {percentageAbsent}%</h3>
+        </div>
+        <div className="attendance-table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>Status</th>
+                <th>Hours Present</th>
+                <th>Hours Absent</th>
+              </tr>
+            </thead>
+            <tbody>
+              {attendanceData.attendance.map((record, index) => (
+                <tr key={index}>
+                  <td>{record.attendanceDate}</td>
+                  <td>{record.classStartTime}</td>
+                  <td>{record.status}</td>
+                  <td>{record.hoursPresent}</td>
+                  <td>{record.hoursAbsent}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
