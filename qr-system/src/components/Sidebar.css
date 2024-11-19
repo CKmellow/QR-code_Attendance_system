@@ -1,4 +1,4 @@
-/* Sidebar styling */
+/* Sidebar base styling */
 .sidebar {
   background-color: #BFA46A;
   color: white;
@@ -8,12 +8,34 @@
   flex-direction: column;
   justify-content: space-between;
   padding-left: 30px;
+  position: fixed; /* Ensure sidebar remains fixed */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
 }
 
-.sidebar-nav {
-  padding: 20px;
+/* Sidebar for smaller devices */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px; /* Adjust sidebar width for tablets */
+    padding-left: 20px;
+  }
 }
 
+@media (max-width: 480px) {
+  .sidebar {
+    transform: translateX(-100%); /* Initially hide the sidebar for phones */
+    width: 180px; /* Adjust sidebar width for smaller devices */
+    padding-left: 15px;
+  }
+
+  .sidebar.show {
+    transform: translateX(0); /* Show sidebar when toggled */
+  }
+}
+
+/* Sidebar navigation links */
 .sidebar-link {
   display: flex;
   align-items: center;
@@ -26,6 +48,7 @@
   cursor: pointer;
   width: 100%;
   text-align: left;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .sidebar-link svg {
@@ -45,6 +68,7 @@
   border-radius: 4px;
 }
 
+/* Sidebar bottom section */
 .sidebar-bottom {
   padding: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
@@ -54,3 +78,57 @@
   padding: 10px 0;
 }
 
+/* Add Class Form styles */
+.add-class-form-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  max-width: 90%; /* Ensures form is responsive */
+}
+
+.add-class-form-container input {
+  width: 100%; /* Full width on smaller screens */
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.cancel-button {
+  margin-left: 10px;
+}
+
+/* Backdrop for modal */
+.add-class-form-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+/* Sidebar toggle button for small screens */
+.sidebar-toggle {
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1002;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .sidebar-toggle {
+    display: block;
+  }
+}
