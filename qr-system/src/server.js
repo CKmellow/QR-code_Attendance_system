@@ -1,8 +1,11 @@
+require('dotenv').config();
+
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const { MongoClient, ObjectId } = require('mongodb');
 const crypto = require("crypto");
 const cors = require('cors');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const port = 5000;
@@ -28,6 +31,8 @@ async function connectToDb() {
     throw new Error('Failed to connect to the database');
   }
 }
+
+
 async function hashExistingPasswords() {
   const db = await connectToDb();
   const usersCollection = db.collection("users");
@@ -449,13 +454,47 @@ app.post('/signup', async (req, res) => {
     res.status(500).json({ message: 'Server error. Please try again later.' });
   }
 });
+
+
+ 
+
+// Configure Nodemailer transporter
+const transporter = nodemailer.createTransport({
+  service: 'Gmail', // Adjust based on your email provider
+  auth: {
+    user: process.env.EMAIL_USER, 
+    pass: process.env.EMAIL_PASS, 
+  },
+});
+
+// Function to send a confirmation email
+async function sendConfirmationEmail(to, studentName, courseName, attendanceDate, classStartTime) {
+  const mailOptions = {
+    from: '"Attendance System" <' + process.env.EMAIL_USER + '>', // Sender's email
+    to, // Receiver's email
+    subject: 'Attendance Confirmation',
+    html: `
+      <h3>Hello ${studentName},</h3>
+      <p>Your attendance has been recorded successfully for the course <b>${courseName}</b>.</p>
+      <ul>
+        <li><b>Date:</b> ${attendanceDate}</li>
+        <li><b>Start Time:</b> ${classStartTime}</li>
+      </ul>
+      <p>Thank you!</p>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+}
+
+// POST route for updating attendance
 app.post('/attendance/update', async (req, res) => {
-  const { studentId, courseId, attendanceDate, classStartTime } = req.body;
+  const { studentId, courseId, attendanceDate, classStartTime, duration } = req.body;
 
   try {
-    const db = await connectToDb();
+    const db = await connectToDb(); // Replace with your database connection function
 
-    // Check if an attendance record already exists
+    // Check if attendance record already exists
     const existingRecord = await db.collection('attendance').findOne({
       studentId,
       courseId,
@@ -463,14 +502,14 @@ app.post('/attendance/update', async (req, res) => {
     });
 
     if (existingRecord) {
-      // Update existing record (add attendance for this classStartTime)
+      // Update the existing attendance record
       await db.collection('attendance').updateOne(
         { studentId, courseId, 'attendanceRecords.attendanceDate': attendanceDate },
         {
           $set: {
-            'attendanceRecords.$.status': 'present', // Mark as present
+            'attendanceRecords.$.status': 'present',
             'attendanceRecords.$.classStartTime': classStartTime,
-            'attendanceRecords.$.hoursPresent': parseInt(req.body.duration || 0), // Use duration if provided
+            'attendanceRecords.$.hoursPresent': parseInt(duration || 0),
             'attendanceRecords.$.hoursAbsent': 0,
           },
         }
@@ -478,25 +517,47 @@ app.post('/attendance/update', async (req, res) => {
     } else {
       // Insert a new attendance record
       await db.collection('attendance').updateOne(
-        { studentId, courseId }, // Match student & course
+        { studentId, courseId },
         {
           $push: {
             attendanceRecords: {
               attendanceDate,
               classStartTime,
               status: 'present',
-              hoursPresent: parseInt(req.body.duration || 0), // Use duration if provided
+              hoursPresent: parseInt(duration || 0),
               hoursAbsent: 0,
             },
           },
         },
-        { upsert: true } // Insert student & course doc if it doesn't exist
+        { upsert: true }
       );
     }
 
-    res.status(200).json({ message: 'Attendance updated successfully.' });
+    // Fetch student details from the database
+    const student = await db.collection('users').findOne({ _id: studentId });
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found.' });
+    }
+
+    // Fetch course details from the database
+    const course = await db.collection('courses').findOne({ _id: courseId });
+    if (!course) {
+      return res.status(404).json({ message: 'Course not found.' });
+    }
+
+    // Send confirmation email
+    await sendConfirmationEmail(
+      student.email,
+      `${student.fname} ${student.lname}`, 
+      course.courseName, 
+      attendanceDate, 
+      classStartTime 
+    );
+
+    
+    res.status(200).json({ message: 'Attendance updated and confirmation email sent.' });
   } catch (error) {
-    console.error('Error updating attendance:', error);
+    console.error('Error updating attendance or sending email:', error);
     res.status(500).json({ message: 'Server error. Failed to update attendance.' });
   }
 });
