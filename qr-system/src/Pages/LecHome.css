@@ -1,84 +1,38 @@
-/* General styles */
 body, html {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
-  height: 100%; /* Ensure full height for proper layout */
+  height: 100%;  /* Ensure full height for proper layout */
 }
 
 /* Flexbox container for the sidebar and main content */
-.app-container {
+.app-container {  
   display: flex;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;   /* Full viewport height */
 }
 
-/* Sidebar styling */
 .sidebar-container {
   width: 250px;
-  position: fixed; /* Fix the sidebar to the left */
-  height: 100vh; /* Full height for the sidebar */
+  position: fixed;     /* Fix the sidebar to the left */
+  height: 100vh;       /* Full height for the sidebar */
   background-color: #282c34; /* Optional: Add a background color for the sidebar */
-  transition: transform 0.3s ease-in-out;
-  z-index: 1000; /* Ensure the sidebar appears on top */
 }
-
-.sidebar-container.hidden {
-  transform: translateX(-100%); /* Hide sidebar on smaller screens */
-}
-
-/* Main content styling */
-.main-content {
-  margin-left: 250px; /* Leave space for the fixed sidebar */
-  padding: 20px;
-  width: calc(100% - 250px); /* Adjust width for the remaining space */
-  overflow-y: auto; /* Allow vertical scrolling for the main content */
-  height: 100vh; /* Full height for the main content */
-  background-color: white;
-  transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
-}
-
-/* Responsive sidebar and main content */
-@media (max-width: 768px) {
-  .sidebar-container {
-    width: 200px; /* Adjust sidebar width for smaller screens */
-  }
-
-  .main-content {
-    margin-left: 200px;
-    width: calc(100% - 200px);
-  }
-}
-
-@media (max-width: 480px) {
-  .sidebar-container {
-    width: 200px; /* Sidebar remains fixed width */
-    transform: translateX(-100%); /* Initially hide sidebar */
-  }
-
-  .sidebar-container.show {
-    transform: translateX(0); /* Show sidebar when toggled */
-  }
-
-  .main-content {
-    margin-left: 0; /* Take full width when sidebar is hidden */
-    width: 100%;
-  }
-}
-
-/* Add Class Form styles */
 .add-class-form-container {
   position: fixed; /* Keep it fixed to the viewport */
-  top: 50%; /* Center vertically */
-  left: 50%; /* Center horizontally */
+  top: 50%;        /* Center vertically */
+  left: 50%;       /* Center horizontally */
   transform: translate(-50%, -50%); /* Adjust for actual dimensions */
-  width: 90%; /* Make form responsive */
-  max-width: 400px; /* Maximum width for larger screens */
+  width: 400px;
   background-color: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.add-class-form {
+  text-align: center;
 }
 
 .add-class-form h2 {
@@ -134,22 +88,23 @@ body, html {
   z-index: 999; /* Ensure it appears just below the modal */
 }
 
-/* Toggle button for mobile devices */
-.sidebar-toggle {
-  display: none;
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 1001;
-  font-size: 24px;
-  background: none;
-  border: none;
-  color: #282c34;
-  cursor: pointer;
+
+.main-content {
+  margin-left: 250px;  /* Leave space for the fixed sidebar */
+  padding: 20px;
+  width: calc(100% - 250px); /* Adjust width for the remaining space */
+  overflow-y: auto;     /* Allow vertical scrolling for the main content */
+  height: 100vh;        /* Full height for the main content */
+  background-color: white;
 }
 
 @media (max-width: 768px) {
-  .sidebar-toggle {
-    display: block;
+  .sidebar-container {
+    width: 200px;  /* Adjust sidebar width for smaller screens */
+  }
+
+  .main-content {
+    margin-left: 200px;
+    width: calc(100% - 200px);
   }
 }
