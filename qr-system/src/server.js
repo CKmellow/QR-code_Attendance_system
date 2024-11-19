@@ -355,6 +355,53 @@ app.get('/class/details/lecturer/:courseId', async (req, res) => {
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 });
+app.get('/class/details/student/:courseId', async (req, res) => {
+  const { courseId } = req.params;
+  const studentId = req.query.studentId; // Accept studentId as a query parameter
+
+  try {
+    const db = await connectToDb();
+
+    // Fetch course details
+    const course = await db.collection('courses').findOne({ _id: courseId });
+    if (!course) {
+      return res.status(404).json({ message: "Course not found." });
+    }
+
+    // Fetch student details
+    const student = await db.collection('users').findOne({ _id: studentId });
+    if (!student) {
+      return res.status(404).json({ message: "Student not found." });
+    }
+
+    // Fetch attendance records
+    const attendanceRecords = await db.collection('attendance').aggregate([
+      { $match: { courseId, studentId } },
+      { $unwind: { path: "$attendanceRecords", preserveNullAndEmptyArrays: true } },
+    ]).toArray();
+
+    // Format attendance
+    const formattedAttendance = attendanceRecords.map(record => ({
+      attendanceDate: record?.attendanceRecords?.attendanceDate || "No Date",
+      classStartTime: record?.attendanceRecords?.classStartTime || "No Start Time",
+      status: record?.attendanceRecords?.status || "No Status",
+      hoursPresent: record?.attendanceRecords?.hoursPresent || 0,
+      hoursAbsent: record?.attendanceRecords?.hoursAbsent || 0,
+    }));
+
+    // Response
+    res.status(200).json({
+      courseName: course.courseName,
+      courseId: course._id,
+      studentId: student._id,
+      studentName: `${student.fname} ${student.lname}`,
+      attendance: formattedAttendance,
+    });
+  } catch (error) {
+    console.error("Error fetching student attendance:", error);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+});
 
 app.post('/signup', async (req, res) => {
   const { fname, lname, _id, email, password, role } = req.body;
