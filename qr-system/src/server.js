@@ -449,9 +449,57 @@ app.post('/signup', async (req, res) => {
     res.status(500).json({ message: 'Server error. Please try again later.' });
   }
 });
+app.post('/attendance/update', async (req, res) => {
+  const { studentId, courseId, attendanceDate, classStartTime } = req.body;
 
+  try {
+    const db = await connectToDb();
 
+    // Check if an attendance record already exists
+    const existingRecord = await db.collection('attendance').findOne({
+      studentId,
+      courseId,
+      'attendanceRecords.attendanceDate': attendanceDate,
+    });
 
+    if (existingRecord) {
+      // Update existing record (add attendance for this classStartTime)
+      await db.collection('attendance').updateOne(
+        { studentId, courseId, 'attendanceRecords.attendanceDate': attendanceDate },
+        {
+          $set: {
+            'attendanceRecords.$.status': 'present', // Mark as present
+            'attendanceRecords.$.classStartTime': classStartTime,
+            'attendanceRecords.$.hoursPresent': parseInt(req.body.duration || 0), // Use duration if provided
+            'attendanceRecords.$.hoursAbsent': 0,
+          },
+        }
+      );
+    } else {
+      // Insert a new attendance record
+      await db.collection('attendance').updateOne(
+        { studentId, courseId }, // Match student & course
+        {
+          $push: {
+            attendanceRecords: {
+              attendanceDate,
+              classStartTime,
+              status: 'present',
+              hoursPresent: parseInt(req.body.duration || 0), // Use duration if provided
+              hoursAbsent: 0,
+            },
+          },
+        },
+        { upsert: true } // Insert student & course doc if it doesn't exist
+      );
+    }
+
+    res.status(200).json({ message: 'Attendance updated successfully.' });
+  } catch (error) {
+    console.error('Error updating attendance:', error);
+    res.status(500).json({ message: 'Server error. Failed to update attendance.' });
+  }
+});
 
 
 
