@@ -3,6 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar.js'; // Import your Sidebar component
 import { QRCodeSVG } from 'qrcode.react'; // Import the SVG-based QR code generator
 import './lecturerclassdetails.css';
+import { AiOutlineZoomIn, AiOutlineZoomOut, AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai'; // Import necessary icons
+import { FaHome,FaQrcode, FaSearchPlus, FaSearchMinus, FaExpand, FaCompress } from 'react-icons/fa';
+import { IoArrowBack } from 'react-icons/io5'
 
 const LecturerClassDetails = () => {
   const { courseId } = useParams();
@@ -72,9 +75,36 @@ const LecturerClassDetails = () => {
   return (
     <div className="lecturer-class-details-container">
       <Sidebar />
+            {/* Top navigation bar */}
+        <div className="top-bar">
+          <button
+            className="home-icon"
+            title="Home"
+            onClick={() => navigate('/lec-home')}
+          >
+            <FaHome size={24} />
+          </button>
+
+          <button
+            className="generate-icon"
+            title="Generate QR Code"
+            onClick={() => setQrModalOpen(true)}
+          >
+            <FaQrcode size={24} />
+          </button>
+        </div>
+
       <div className="lecturer-class-details-content">
-        <button className="back-button" onClick={() => navigate('/lec-home')}>Home</button>
-        <button className="generate" onClick={() => setQrModalOpen(true)}>Generate QR Code</button>
+          <button className="back-button" onClick={() => navigate('/lec-home')}>Home</button>
+
+          {/* Replace the "Generate QR Code" button with an icon */}
+          <button
+            className="generate-icon"
+            title="Generate QR Code"
+            onClick={() => setQrModalOpen(true)}
+          >
+            <FaQrcode size={24} />
+          </button>
         <h2>Class Details for {classDetails.courseName}</h2>
         <div>
           <h3>Course Information:</h3>
@@ -127,24 +157,27 @@ const LecturerClassDetails = () => {
       {/* QR Modal */}
       {qrModalOpen && (
         <div className="modal">
-          <div className="modal-content">
-            <button className="close-modal" onClick={() => setQrModalOpen(false)}>x</button>
-            <h4>Generate QR Code for Attendance</h4>
-            <label>
-              Date:
-              <input type="date" name="date" value={qrDetails.date} onChange={handleQrInputChange} />
-            </label>
-            <label>
-              Start Time:
-              <input type="time" name="startTime" value={qrDetails.startTime} onChange={handleQrInputChange} />
-            </label>
-            <label>
-              Duration (hours):
-              <input type="number" name="duration" value={qrDetails.duration} onChange={handleQrInputChange} />
-            </label>
-            <button className="details" onClick={handleGenerateQr}>Generate</button>
-          </div>
-        </div>
+  <div className="modal-content">
+    <button className="close-modal" onClick={() => setQrModalOpen(false)}>x</button>
+    <h4>Generate QR Code for Attendance</h4>
+    <form className="qr-form">
+      <label>
+        Date:
+        <input type="date" name="date" value={qrDetails.date} onChange={handleQrInputChange} />
+      </label>
+      <label>
+        Start Time:
+        <input type="time" name="startTime" value={qrDetails.startTime} onChange={handleQrInputChange} />
+      </label>
+      <label>
+        Duration (hours):
+        <input type="number" name="duration" value={qrDetails.duration} onChange={handleQrInputChange} />
+      </label>
+      <button className="details" onClick={handleGenerateQr}>Generate</button>
+    </form>
+  </div>
+</div>
+
       )}
 
      {/* Display Generated QR Code */}
@@ -160,25 +193,28 @@ const LecturerClassDetails = () => {
                 className={`qr-code ${qrFullScreen ? 'fullscreen-qr' : ''}`}
               />
               <div className="qr-actions">
-                <button
-                  className="zoom-in"
-                  onClick={() => setQrZoom(qrZoom + 50)}
-                >
-                  Zoom In
-                </button>
-                <button
-                  className="zoom-out"
-                  onClick={() => setQrZoom(Math.max(qrZoom - 50, 256))}
-                >
-                  Zoom Out
-                </button>
-                <button
-                  className="fullscreen"
-                  onClick={() => setQrFullScreen(!qrFullScreen)}
-                >
-                  {qrFullScreen ? 'Exit Full Screen' : 'Full Screen'}
-                </button>
-              </div>
+                  <button
+                    className="zoom-in"
+                    onClick={() => setQrZoom(qrZoom + 50)}
+                    title="Zoom In"
+                  >
+                    <AiOutlineZoomIn size={24} />
+                  </button>
+                  <button
+                    className="zoom-out"
+                    onClick={() => setQrZoom(Math.max(qrZoom - 50, 256))}
+                    title="Zoom Out"
+                  >
+                    <AiOutlineZoomOut size={24} />
+                  </button>
+                  <button
+                    className="fullscreen"
+                    onClick={() => setQrFullScreen(!qrFullScreen)}
+                    title={qrFullScreen ? "Exit Full Screen" : "Full Screen"}
+                  >
+                    {qrFullScreen ? <AiOutlineFullscreenExit size={24} /> : <AiOutlineFullscreen size={24} />}
+                  </button>
+                </div>
             </div>
           </div>
         </div>
