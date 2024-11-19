@@ -356,22 +356,28 @@ app.get('/class/details/lecturer/:courseId', async (req, res) => {
   }
 });
 
-// POST route for signup
 app.post('/signup', async (req, res) => {
-  const { fname, lname, _id, password, role } = req.body;
+  const { fname, lname, _id, email, password, role } = req.body;
 
-  if (!fname || !lname || !_id || !password || !role) {
+  // Validate input fields
+  if (!fname || !lname || !_id || !email || !password || !role) {
     return res.status(400).json({ message: 'All fields are required.' });
+  }
+
+  // Validate email format (basic check)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: 'Invalid email format.' });
   }
 
   try {
     const db = await connectToDb();
     const usersCollection = db.collection('users');
 
-    // Check if user already exists
-    const existingUser = await usersCollection.findOne({ _id });
+    // Check if user already exists by ID or email
+    const existingUser = await usersCollection.findOne({ $or: [{ _id }, { email }] });
     if (existingUser) {
-      return res.status(400).json({ message: 'User with this ID already exists.' });
+      return res.status(400).json({ message: 'User with this ID or email already exists.' });
     }
 
     // Hash the password
@@ -382,6 +388,7 @@ app.post('/signup', async (req, res) => {
       _id,
       fname,
       lname,
+      email, // Include email
       password: hashedPassword,
       role,
     };
@@ -395,6 +402,7 @@ app.post('/signup', async (req, res) => {
     res.status(500).json({ message: 'Server error. Please try again later.' });
   }
 });
+
 
 
 

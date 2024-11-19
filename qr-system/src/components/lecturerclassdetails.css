@@ -159,3 +159,62 @@ table tr:nth-child(even) {
     width: 90%; /* Adjust modal width for smaller screens */
   }
 }
+
+.qr-code-container {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-code-container h4 {
+  margin-bottom: 10px;
+}
+
+.qr-modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-code-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-code {
+  margin: 20px 0;
+}
+
+.qr-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.qr-actions button {
+  background-color: #007bff; /* Blue */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.qr-actions button:hover {
+  background-color: #0056b3; /* Darker blue */
+}
+
+.fullscreen-qr {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
