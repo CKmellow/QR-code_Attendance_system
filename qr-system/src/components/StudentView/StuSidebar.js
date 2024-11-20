@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import { FaPlus, FaUser } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import "./StuSidebar.css";
 
-const StuSidebar = () => {
+const StuSidebar = ({ setClasses }) => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [showJoinClassModal, setShowJoinClassModal] = useState(false);
   const [courseId, setCourseId] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+
   const handleLogout = () => {
     // Clear user data from localStorage
     localStorage.removeItem("user");
 
     // Redirect to the login page
-    navigate("/login"); // Use React Router's navigate
+    navigate("/login");
   };
 
   const handleJoinClass = async (e) => {
@@ -33,7 +34,7 @@ const StuSidebar = () => {
         },
         body: JSON.stringify({
           courseId,
-          studentId: user?._id, // Assume `user` contains `studentId`
+          studentId: user?._id,
         }),
       });
 
@@ -43,6 +44,9 @@ const StuSidebar = () => {
         setMessage(data.message || "Successfully joined the class!");
         setCourseId(""); // Clear the input
         setShowJoinClassModal(false); // Close modal
+
+        // Dynamically update classes
+        setClasses((prevClasses) => [...prevClasses, data.newClass]);
       } else {
         setMessage(data.message || "Failed to join the class.");
       }
@@ -99,8 +103,8 @@ const StuSidebar = () => {
         >
           <FaPlus /> Join Class
         </button>
-        <button className="sidebar-link " onClick={handleLogout}>
-           Logout
+        <button className="sidebar-link" onClick={handleLogout}>
+          Logout
         </button>
       </div>
     </div>

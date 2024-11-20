@@ -16,14 +16,14 @@ body, html {
   width: 250px;
   position: fixed;     /* Fix the sidebar to the left */
   height: 100vh;       /* Full height for the sidebar */
-  background-color: #282c34; /* Optional: Add a background color for the sidebar */
+   
 }
 .add-class-form-container {
   position: fixed; /* Keep it fixed to the viewport */
   top: 50%;        /* Center vertically */
   left: 50%;       /* Center horizontally */
   transform: translate(-50%, -50%); /* Adjust for actual dimensions */
-  width: 400px;
+  width: 474px;     /* Full width on smaller screens */
   background-color: white;
   padding: 20px;
   border-radius: 8px;

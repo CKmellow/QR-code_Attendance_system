@@ -21,10 +21,15 @@ function App() {
         <Route path="/attendance/:courseId/" element={<StudentAttendance />} />
       </Routes>
     </Router>
-    <Toaster 
-      richColors
-      position="top-right"
-      />
+    <Toaster
+  richColors
+  position="top-right"
+  toastOptions={{
+    duration: 3000, // Toast closes after 3 seconds
+    style: { animationDuration: "0.2s" }, // Makes it appear faster
+  }}
+/>
+
     </>
   );
 }

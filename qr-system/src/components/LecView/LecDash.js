@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LecDash.css';
+import Loader from '../Loader';
 
 const LecDash = () => {
   const [classes, setClasses] = useState([]);
@@ -36,7 +37,7 @@ const LecDash = () => {
     navigate(`/class-details/lecturer/${courseId}`);
   };
 
-  if (loading) return <p>Loading classes...</p>;
+  if (loading) return <Loader/>;
   if (error) return <p>Error: {error}</p>;
 
   return (

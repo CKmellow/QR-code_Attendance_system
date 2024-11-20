@@ -44,4 +44,7 @@
   .view-class-button:hover {
     background-color: #885f12;
   }
+  .spinner{
+    position: absolute;
+  }
   

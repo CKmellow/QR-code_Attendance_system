@@ -97,26 +97,73 @@
     color: #6c757d;
   }
   
-  .qr-scanner {
+  .qr-scanner-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
-    margin: 20px 0;
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    z-index: 1000;
   }
   
-  .close-scanner-button {
-    padding: 10px 15px;
-    font-size: 14px;
+  .qr-scanner-content {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: relative;
+  }
+  
+  .close-modal-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: black;
     border: none;
-    border-radius: 5px;
-    background-color: #dc3545;
-    color: #fff;
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    color: white;
   }
   
-  .close-scanner-button:hover {
-    background-color: #a71d2a;
+  h2 {
+    margin-bottom: 20px;
   }
+  
+  .qr-reader-container {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .qr-reader-container.success {
+    box-shadow: 0 0 15px 3px green; /* Green glow for success */
+  }
+  
+  .qr-reader-container.error {
+    box-shadow: 0 0 15px 3px red; /* Red glow for error */
+  }
+  
+  /* Responsive Design for Mobile */
+  @media (max-width: 768px) {
+    .qr-scanner-content {
+      width: 95%;
+      padding: 15px;
+    }
+  
+    h2 {
+      font-size: 18px;
+    }
+  
+    .close-modal-button {
+      font-size: 14px;
+    }
+  }
+ 
   

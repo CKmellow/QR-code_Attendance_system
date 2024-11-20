@@ -2,7 +2,7 @@ import React from "react";
 import '../Pages/LecHome.css';
 import Stusidebar from "../components/StudentView/StuSidebar";
 import Studash from "../components/StudentView/StudentDash";
-import './StudentHome.css';
+import './StudentHome.css'
 
 function StudentHome() {
     return (

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './StuDash.css';
 import StuSidebar from './StuSidebar';
+import Loader from '../Loader';
 
 const StuDash = () => {
   const [classes, setClasses] = useState([]);
@@ -58,20 +59,21 @@ const StuDash = () => {
     return totalHours === 0 ? 0 : ((totalAbsent / totalHours) * 100).toFixed(2);
   };
 
-  if (loading) return <p>Loading classes...</p>;
+  if (loading) return <Loader/>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="dashboard-container">
-      <StuSidebar />
-      <div className="dash">
-        <h2>Classes</h2>
-      </div>
+    <StuSidebar setClasses={setClasses} />
+    <div className="main-content">
+      <h2>Classes</h2>
       <div className="class-grid">
         {classes.map((classItem) => (
           <div key={classItem._id} className="class-tile">
             <h3>{classItem.name || classItem.courseName}</h3>
-            <p>Percentage Absent: {attendancePercentages[classItem._id] || 'N/A'}%</p>
+            <p>
+              Percentage Absent: {attendancePercentages[classItem._id] || "N/A"}%
+            </p>
             <Link to={`/attendance/${classItem._id}`}>
               <button className="view-class-button">View Class</button>
             </Link>
@@ -79,6 +81,7 @@ const StuDash = () => {
         ))}
       </div>
     </div>
+  </div>
   );
 };
 
