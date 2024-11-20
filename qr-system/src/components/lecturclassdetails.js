@@ -6,6 +6,7 @@ import './lecturerclassdetails.css';
 import { AiOutlineZoomIn, AiOutlineZoomOut, AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai'; // Import necessary icons
 import { FaHome,FaQrcode, FaSearchPlus, FaSearchMinus, FaExpand, FaCompress } from 'react-icons/fa';
 import { IoArrowBack } from 'react-icons/io5'
+import Loader from './Loader.js';
 
 const LecturerClassDetails = () => {
   const { courseId } = useParams();
@@ -69,7 +70,7 @@ const LecturerClassDetails = () => {
   const openModal = (studentId) => setShowDetails(studentId);
   const closeModal = () => setShowDetails(null);
 
-  if (loading) return <p>Loading class details...</p>;
+  if (loading) return <Loader/>;
   if (error) return <p>Error: {error}</p>;
 
   return (

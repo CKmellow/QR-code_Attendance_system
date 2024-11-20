@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaTachometerAlt, FaPlus, FaUser } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 import './Sidebar.css';
+import { toast } from 'sonner';
 
 const Sidebar = () => {
   const [className, setClassName] = useState('');
@@ -48,11 +49,13 @@ const Sidebar = () => {
       const data = await response.json();
   
       if (response.ok) {
-        alert(data.message || "Class added successfully!");
+        // alert(data.message || "Class added successfully!");
+        toast.success(data.message || "Class added successfully!");
         setClassName(""); // Assuming setClassName is a state setter for className
         setShowAddClassForm(false); // Assuming setShowAddClassForm is a state setter for showing the form
       } else {
-        alert(data.message || "Failed to add class");
+        // alert(data.message || "Failed to add class");
+        toast.error(data.message || "Failed to add class");
       }
     } catch (error) {
       console.error("Error adding class:", error);

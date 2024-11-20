@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
+import { toast } from 'sonner';
 
 const LoginPage = () => {
   const [_id, setId] = useState('');
@@ -41,10 +42,12 @@ const LoginPage = () => {
         }
       } else {
         setErrorMessage(data.message);
+        toast.error(data.message);
       }
     } catch (error) {
       console.error('Login error:', error);
       setErrorMessage('Server error. Please try again later.');
+      toast.error('Server error. Please try again later.');
     }
   };
 

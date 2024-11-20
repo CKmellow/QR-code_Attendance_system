@@ -5,11 +5,13 @@ import LecHome from './Pages/LecHome';
 import StudentHome from './Pages/StudentHome';
 import LecturerClassDetails from './components/lecturclassdetails';
 import StudentAttendance from './components/StudentView/StudentAttendance';
+import { Toaster } from 'sonner';
 
 
 function App() {
   return (
-    <Router>
+    <>
+      <Router>
       <Routes>
         <Route path='/' element={<LoginPage />} />
         <Route path='/login' element={<LoginPage />} />
@@ -19,6 +21,11 @@ function App() {
         <Route path="/attendance/:courseId/" element={<StudentAttendance />} />
       </Routes>
     </Router>
+    <Toaster 
+      richColors
+      position="top-right"
+      />
+    </>
   );
 }
 
