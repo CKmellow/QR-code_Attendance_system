@@ -1,111 +1,110 @@
 body, html {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    height: 100%;  /* Ensure full height for proper layout */
-  }
-  
-  /* Flexbox container for the sidebar and main content */
-  .app-container {  
-    display: flex;
-    height: 100vh;   /* Full viewport height */
-  }
-  
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  height: 100%;  /* Ensure full height for proper layout */
+}
+
+/* Flexbox container for the sidebar and main content */
+.app-container {  
+  display: flex;
+  height: 100vh;   /* Full viewport height */
+}
+
+.sidebar-container {
+  width: 250px;
+  position: fixed;     /* Fix the sidebar to the left */
+  height: 100vh;       /* Full height for the sidebar */
+  background-color: #282c34; /* Optional: Add a background color for the sidebar */
+}
+.add-class-form-container {
+  position: fixed; /* Keep it fixed to the viewport */
+  top: 50%;        /* Center vertically */
+  left: 50%;       /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust for actual dimensions */
+  width: 400px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.add-class-form {
+  text-align: center;
+}
+
+.add-class-form h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.add-class-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.add-class-form button {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-class-form button[type="submit"] {
+  background-color: #BFA46A;
+  color: white;
+}
+
+.add-class-form button[type="submit"]:hover {
+  background-color: #885f12;
+}
+
+.add-class-form .cancel-button {
+  background-color: #ccc;
+  color: black;
+}
+
+.add-class-form .cancel-button:hover {
+  background-color: #999;
+}
+
+/* Optional backdrop overlay for dimming the background */
+.add-class-form-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999; /* Ensure it appears just below the modal */
+}
+
+
+.main-content {
+  margin-left: 250px;  /* Leave space for the fixed sidebar */
+  padding: 20px;
+  width: calc(100% - 250px); /* Adjust width for the remaining space */
+  overflow-y: auto;     /* Allow vertical scrolling for the main content */
+  height: 100vh;        /* Full height for the main content */
+  background-color: white;
+}
+
+@media (max-width: 768px) {
   .sidebar-container {
-    width: 250px;
-    position: fixed;     /* Fix the sidebar to the left */
-    height: 100vh;       /* Full height for the sidebar */
-    background-color: #282c34; /* Optional: Add a background color for the sidebar */
+    width: 200px;  /* Adjust sidebar width for smaller screens */
   }
-  .add-class-form-container {
-    position: fixed; /* Keep it fixed to the viewport */
-    top: 50%;        /* Center vertically */
-    left: 50%;       /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust for actual dimensions */
-    width: 400px;
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000; /* Ensure it appears above other elements */
-  }
-  
-  .add-class-form {
-    text-align: center;
-  }
-  
-  .add-class-form h2 {
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .add-class-form input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-  }
-  
-  .add-class-form button {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .add-class-form button[type="submit"] {
-    background-color: #BFA46A;
-    color: white;
-  }
-  
-  .add-class-form button[type="submit"]:hover {
-    background-color: #885f12;
-  }
-  
-  .add-class-form .cancel-button {
-    background-color: #ccc;
-    color: black;
-  }
-  
-  .add-class-form .cancel-button:hover {
-    background-color: #999;
-  }
-  
-  /* Optional backdrop overlay for dimming the background */
-  .add-class-form-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999; /* Ensure it appears just below the modal */
-  }
-  
-  
+
   .main-content {
-    margin-left: 250px;  /* Leave space for the fixed sidebar */
-    padding: 20px;
-    width: calc(100% - 250px); /* Adjust width for the remaining space */
-    overflow-y: auto;     /* Allow vertical scrolling for the main content */
-    height: 100vh;        /* Full height for the main content */
-    background-color: white;
+    margin-left: 200px;
+    width: calc(100% - 200px);
   }
-  
-  @media (max-width: 768px) {
-    .sidebar-container {
-      width: 200px;  /* Adjust sidebar width for smaller screens */
-    }
-  
-    .main-content {
-      margin-left: 200px;
-      width: calc(100% - 200px);
-    }
-  }
-  
+}
