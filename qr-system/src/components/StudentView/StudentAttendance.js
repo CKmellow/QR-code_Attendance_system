@@ -49,63 +49,68 @@ const StudentAttendance = () => {
 
   const [isScanning, setIsScanning] = useState(false); // Add a scanning state
 
-const handleScan = async (data) => {
-  if (data && !isScanning) { // Ensure scanning only happens if not already processing
-    setIsScanning(true); // Set scanning state to true
-    console.log("Raw QR Data:", data);
-    try {
-      // Extract the text property from the scanned data
-      const qrDataText = data.text;
-
-      // Parse the text property as JSON
-      const qrData = JSON.parse(qrDataText);
-      console.log("Parsed QR Data:", qrData);
-
-      // Validate QR data structure
-      if (!qrData.courseId || !qrData.date || !qrData.startTime || !qrData.duration) {
-        setScanError('Invalid QR code data.');
-        toast.error('Invalid QR code data.');
-        setIsScanning(false); // Reset scanning state
-        return;
+  const handleScan = async (data) => {
+    if (data && !isScanning) { // Ensure scanning only happens if not already processing
+      setIsScanning(true); // Set scanning state to true
+      console.log("Raw QR Data:", data);
+      try {
+        // Extract the text property from the scanned data
+        const qrDataText = data.text;
+  
+        // Parse the text property as JSON
+        const qrData = JSON.parse(qrDataText);
+        console.log("Parsed QR Data:", qrData);
+  
+        // Validate QR data structure
+        if (!qrData.courseId || !qrData.date || !qrData.startTime || !qrData.duration) {
+          setScanError('Invalid QR code data.');
+          toast.error('Invalid QR code data.');
+          setIsScanning(false); // Reset scanning state
+          return;
+        }
+  
+        if (qrData.courseId !== courseId) {
+          setScanError('Invalid QR code for this course.');
+          toast.error('Invalid QR code data.');
+          setIsScanning(false); // Reset scanning state
+          return;
+        }
+  
+        const studentId = JSON.parse(localStorage.getItem('user'))?._id;
+        if (!studentId) {
+          setScanError('Student ID not found. Please log in.');
+          toast.error('Student ID not found. Please log in.');
+          setIsScanning(false); // Reset scanning state
+          return;
+        }
+  
+        // Send request to backend
+        const response = await axios.post('/attendance/update', {
+          studentId,
+          courseId: qrData.courseId,
+          attendanceDate: qrData.date,
+          classStartTime: qrData.startTime,
+          duration: qrData.duration,
+        });
+  
+        console.log('Attendance updated:', response.data);
+        toast.success('Attendance updated successfully.');
+  
+        // Close the QR modal after successful scan and update
+        setQrModalOpen(false);
+  
+        // Clear scan error in case of successful scan
+        setScanError('');
+      } catch (error) {
+        console.error('Error updating attendance:', error.response?.data || error.message);
+        setScanError('Failed to update attendance. Try again.');
+        toast.error('Failed to update attendance. Try again.');
+      } finally {
+        setIsScanning(false); // Reset scanning state after completion
       }
-
-      if (qrData.courseId !== courseId) {
-        setScanError('Invalid QR code for this course.');
-        toast.error('Invalid QR code data.');
-        setIsScanning(false); // Reset scanning state
-        return;
-      }
-
-      const studentId = JSON.parse(localStorage.getItem('user'))?._id;
-      if (!studentId) {
-        setScanError('Student ID not found. Please log in.');
-        toast.error('Student ID not found. Please log in.');
-        setIsScanning(false); // Reset scanning state
-        return;
-      }
-
-      // Send request to backend
-      const response = await axios.post('/attendance/update', {
-        studentId,
-        courseId: qrData.courseId,
-        attendanceDate: qrData.date,
-        classStartTime: qrData.startTime,
-        duration: qrData.duration,
-      });
-
-      console.log('Attendance updated:', response.data);
-      toast.success('Attendance updated successfully.');
-      setQrModalOpen(false);
-      setScanError('');
-    } catch (error) {
-      console.error('Error updating attendance:', error.response?.data || error.message);
-      setScanError('Failed to update attendance. Try again.');
-      toast.error('Failed to update attendance. Try again.');
-    } finally {
-      setIsScanning(false); // Reset scanning state after completion
     }
-  }
-};
+  };
+ 
 
   
   

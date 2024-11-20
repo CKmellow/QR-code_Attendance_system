@@ -66,13 +66,27 @@ const LoginPage = () => {
 
       if (response.status === 201) {
         setErrorMessage('Signup successful! You can now log in.');
-        setIsLogin(true); // Switch to login view
+        toast.success('Signup successful! You can now log in.');
+
+        // Switch to login tab after successful signup
+        setIsLogin(true);
+        // Optionally clear the signup form
+        setSignupData({
+          fname: '',
+          lname: '',
+          _id: '',
+          email: '',
+          password: '',
+          role: '',
+        });
       } else {
         setErrorMessage(data.message);
+        toast.error(data.message);
       }
     } catch (error) {
       console.error('Signup error:', error);
       setErrorMessage('Server error. Please try again later.');
+      toast.error('Server error. Please try again later.');
     }
   };
 

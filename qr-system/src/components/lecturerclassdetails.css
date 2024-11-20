@@ -274,7 +274,7 @@ table tr:nth-child(even) {
 .generate-icon {
   background: none;
   border: none;
-  color: #007bff;
+  color: #000;
   cursor: pointer;
   margin-left: 10px;
   font-size: 1.5rem;
@@ -282,11 +282,16 @@ table tr:nth-child(even) {
   align-items: center;
   justify-content: center;
   transition: color 0.2s ease;
+  position: fixed; /* Fixed position relative to the viewport */
+  top: 20px; /* 20px from the top of the screen */
+  left: 20px; /* 20px from the left of the screen */
+  z-index: 100; /* Ensure it stays on top of other content */
 }
 
 .generate-icon:hover {
-  color: #0056b3;
+  color: #007bff; /* You can change this to the hover effect you want */
 }
+
 
 .generate-icon:focus {
   outline: none;

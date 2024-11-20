@@ -26,7 +26,7 @@ function App() {
   position="top-right"
   toastOptions={{
     duration: 3000, // Toast closes after 3 seconds
-    style: { animationDuration: "0.2s" }, // Makes it appear faster
+    style: { animationDuration: "0.1s" }, // Makes it appear faster
   }}
 />
 
