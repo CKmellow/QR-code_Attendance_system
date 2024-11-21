@@ -67,7 +67,7 @@ const StuSidebar = ({ setClasses }) => {
       {/* Join Class Modal */}
       {showJoinClassModal && (
         <div className="modal">
-          <div className="modal-content">
+          <div className="modal-contents">
             <h2>Join Class</h2>
             <form onSubmit={handleJoinClass}>
               <label htmlFor="courseId">Enter Class ID:</label>

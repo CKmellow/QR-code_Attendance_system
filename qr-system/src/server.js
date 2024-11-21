@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 
 const express = require('express');
 const bcrypt = require('bcryptjs');
@@ -360,6 +360,7 @@ app.get('/class/details/lecturer/:courseId', async (req, res) => {
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 });
+
 app.get('/class/details/student/:courseId', async (req, res) => {
   const { courseId } = req.params;
   const studentId = req.query.studentId; // Accept studentId as a query parameter
@@ -565,6 +566,6 @@ app.post('/attendance/update', async (req, res) => {
 
 
 // Start the server
-app.listen(port, () => {
+app.listen(port , () => {
   console.log(`Server running on http://localhost:${port}`);
 });

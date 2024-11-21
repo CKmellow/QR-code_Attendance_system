@@ -62,9 +62,20 @@ const StudentAttendance = () => {
         console.log("Parsed QR Data:", qrData);
   
         // Validate QR data structure
-        if (!qrData.courseId || !qrData.date || !qrData.startTime || !qrData.duration) {
+        if (!qrData.courseId || !qrData.date || !qrData.startTime || !qrData.duration || !qrData.expiry) {
           setScanError('Invalid QR code data.');
           toast.error('Invalid QR code data.');
+          setIsScanning(false); // Reset scanning state
+          return;
+        }
+        if(!qrData.expiry){(toast.error('No expiry stuff'));}
+  
+        // Check QR code expiration
+        const currentTime = Date.now();
+        const expiryTime = new Date(qrData.expiry).getTime();
+        if (currentTime > expiryTime) {
+          setScanError('QR code has expired.');
+          toast.error('QR code has expired.');
           setIsScanning(false); // Reset scanning state
           return;
         }
@@ -110,6 +121,7 @@ const StudentAttendance = () => {
       }
     }
   };
+  
  
 
   

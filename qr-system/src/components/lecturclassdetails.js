@@ -3,9 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar.js'; // Import your Sidebar component
 import { QRCodeSVG } from 'qrcode.react'; // Import the SVG-based QR code generator
 import './lecturerclassdetails.css';
-import { AiOutlineZoomIn, AiOutlineZoomOut, AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai'; // Import necessary icons
-import { FaHome,FaQrcode, FaSearchPlus, FaSearchMinus, FaExpand, FaCompress } from 'react-icons/fa';
-import { IoArrowBack } from 'react-icons/io5'
+import {
+  AiOutlineZoomIn,
+  AiOutlineZoomOut,
+  AiOutlineFullscreen,
+  AiOutlineFullscreenExit,
+} from 'react-icons/ai'; // Import necessary icons
+import { FaHome, FaQrcode } from 'react-icons/fa';
 import Loader from './Loader.js';
 
 const LecturerClassDetails = () => {
@@ -15,12 +19,11 @@ const LecturerClassDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [qrModalOpen, setQrModalOpen] = useState(false); // Manage QR modal
-  const [qrDetails, setQrDetails] = useState({ date: '', startTime: '', duration: '' });
+  const [qrDetails, setQrDetails] = useState({ date: '', startTime: '', duration: '', expirationTime: 10 });
   const [generatedQrData, setGeneratedQrData] = useState(null);
   const [showDetails, setShowDetails] = useState(null); // Tracks which student's details are being shown
   const [qrZoom, setQrZoom] = useState(256); // Default QR code size
   const [qrFullScreen, setQrFullScreen] = useState(false);
-
 
   useEffect(() => {
     const fetchClassDetails = async () => {
@@ -57,12 +60,19 @@ const LecturerClassDetails = () => {
   };
 
   const handleGenerateQr = () => {
-    const { date, startTime, duration } = qrDetails;
+    const { date, startTime, duration, expirationTime } = qrDetails;
     if (!date || !startTime || !duration) {
       alert('Please fill in all the fields.');
       return;
     }
-    const qrData = { courseId, date, startTime, duration };
+
+    // Calculate expiration timestamp
+    const now = new Date();
+    const expirationMinutes = expirationTime ? parseInt(expirationTime, 10) : 10; // Default 10 minutes
+    const expirationTimestamp = new Date(now.getTime() + expirationMinutes * 60000);
+
+    // Include expiration timestamp in QR data
+    const qrData = { courseId, date, startTime, duration, expirationTimestamp: expirationTimestamp.toISOString() };
     setGeneratedQrData(qrData); // Pass data for QR generation
     setQrModalOpen(false);
   };
@@ -70,48 +80,36 @@ const LecturerClassDetails = () => {
   const openModal = (studentId) => setShowDetails(studentId);
   const closeModal = () => setShowDetails(null);
 
-  if (loading) return <Loader/>;
+  if (loading) return <Loader />;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="lecturer-class-details-container">
       <Sidebar />
-            {/* Top navigation bar */}
-        <div className="top-bar">
-          <button
-            className="home-icon"
-            title="Home"
-            onClick={() => navigate('/lec-home')}
-          >
-            <FaHome size={24} />
-          </button>
+      {/* Top navigation bar */}
+      <div className="top-bar">
+        <button className="home-icon" title="Home" onClick={() => navigate('/lec-home')}>
+          <FaHome size={24} />
+        </button>
 
-          <button
-            className="generate-icon"
-            title="Generate QR Code"
-            onClick={() => setQrModalOpen(true)}
-          >
-            <FaQrcode size={24} />
-          </button>
-        </div>
+        <button className="generate-icon" title="Generate QR Code" onClick={() => setQrModalOpen(true)}>
+          <FaQrcode size={24} />
+        </button>
+      </div>
 
       <div className="lecturer-class-details-content">
-          <button className="back-button" onClick={() => navigate('/lec-home')}>Home</button>
-
-          {/* Replace the "Generate QR Code" button with an icon */}
-          <button
-            className="generate-icon"
-            title="Generate QR Code"
-            onClick={() => setQrModalOpen(true)}
-          >
-            <FaQrcode size={24} />
-          </button>
         <h2>Class Details for {classDetails.courseName}</h2>
         <div>
           <h3>Course Information:</h3>
-          <p><strong>Course ID:</strong> {classDetails.courseId}</p>
-          <p><strong>Lecturer ID:</strong> {classDetails.lecturerId}</p>
-          <p><strong>Number of Students:</strong> {classDetails.numOfStudents}</p>
+          <p>
+            <strong>Course ID:</strong> {classDetails.courseId}
+          </p>
+          <p>
+            <strong>Lecturer ID:</strong> {classDetails.lecturerId}
+          </p>
+          <p>
+            <strong>Number of Students:</strong> {classDetails.numOfStudents}
+          </p>
         </div>
 
         {classDetails.students && classDetails.students.length > 0 ? (
@@ -137,12 +135,16 @@ const LecturerClassDetails = () => {
                   return (
                     <tr key={index}>
                       <td>{student.studentId}</td>
-                      <td>{student.fname} {student.lname}</td>
+                      <td>
+                        {student.fname} {student.lname}
+                      </td>
                       <td>{totalHoursPresent}</td>
                       <td>{totalHoursAbsent}</td>
                       <td>{percentageAbsent}%</td>
                       <td>
-                        <button className="details" onClick={() => openModal(student.studentId)}>View Details</button>
+                        <button className="details" onClick={() => openModal(student.studentId)}>
+                          View Details
+                        </button>
                       </td>
                     </tr>
                   );
@@ -158,99 +160,103 @@ const LecturerClassDetails = () => {
       {/* QR Modal */}
       {qrModalOpen && (
         <div className="modal">
-  <div className="modal-content">
-    <button className="close-modal" onClick={() => setQrModalOpen(false)}>x</button>
-    <h4>Generate QR Code for Attendance</h4>
-    <form className="qr-form">
-      <label>
-        Date:
-        <input type="date" name="date" value={qrDetails.date} onChange={handleQrInputChange} />
-      </label>
-      <label>
-        Start Time:
-        <input type="time" name="startTime" value={qrDetails.startTime} onChange={handleQrInputChange} />
-      </label>
-      <label>
-        Duration (hours):
-        <input type="number" name="duration" value={qrDetails.duration} onChange={handleQrInputChange} />
-      </label>
-      <button className="details" onClick={handleGenerateQr}>Generate</button>
-    </form>
-  </div>
-</div>
-
+          <div className="modal-content">
+            <button className="close-modal" onClick={() => setQrModalOpen(false)}>
+              x
+            </button>
+            <h4>Generate QR Code for Attendance</h4>
+            <form className="qr-form">
+              <label>
+                Date:
+                <input type="date" name="date" value={qrDetails.date} onChange={handleQrInputChange} />
+              </label>
+              <label>
+                Start Time:
+                <input type="time" name="startTime" value={qrDetails.startTime} onChange={handleQrInputChange} />
+              </label>
+              <label>
+                Duration (hours):
+                <input type="number" name="duration" value={qrDetails.duration} onChange={handleQrInputChange} />
+              </label>
+              <label>
+                Expiration Time (minutes, default is 10):
+                <input
+                  type="number"
+                  name="expirationTime"
+                  value={qrDetails.expirationTime || 10}
+                  onChange={handleQrInputChange}
+                />
+              </label>
+              <button className="details" onClick={handleGenerateQr}>
+                Generate
+              </button>
+            </form>
+          </div>
+        </div>
       )}
 
-     {/* Display Generated QR Code */}
-     {generatedQrData && (
+      {/* Display Generated QR Code */}
+      {generatedQrData && (
         <div className="modal">
           <div className="modal-content qr-modal-content">
-            <button className="close-modal" onClick={() => setGeneratedQrData(null)}>x</button>
+            <button className="close-modal" onClick={() => setGeneratedQrData(null)}>
+              x
+            </button>
             <h4>QR Code for Session</h4>
-            <div className="qr-code-wrapper">
+            <div>
+              <p>Expires At: {new Date(generatedQrData.expirationTimestamp).toLocaleTimeString()}</p>
               <QRCodeSVG
                 value={JSON.stringify(generatedQrData)}
                 size={qrZoom}
                 className={`qr-code ${qrFullScreen ? 'fullscreen-qr' : ''}`}
               />
               <div className="qr-actions">
-                  <button
-                    className="zoom-in"
-                    onClick={() => setQrZoom(qrZoom + 50)}
-                    title="Zoom In"
-                  >
-                    <AiOutlineZoomIn size={24} />
-                  </button>
-                  <button
-                    className="zoom-out"
-                    onClick={() => setQrZoom(Math.max(qrZoom - 50, 256))}
-                    title="Zoom Out"
-                  >
-                    <AiOutlineZoomOut size={24} />
-                  </button>
-                  <button
-                    className="fullscreen"
-                    onClick={() => setQrFullScreen(!qrFullScreen)}
-                    title={qrFullScreen ? "Exit Full Screen" : "Full Screen"}
-                  >
-                    {qrFullScreen ? <AiOutlineFullscreenExit size={24} /> : <AiOutlineFullscreen size={24} />}
-                  </button>
-                </div>
+                <button
+                  className="zoom-in"
+                  onClick={() => setQrZoom(qrZoom + 50)}
+                  title="Zoom In"
+                >
+                  <AiOutlineZoomIn size={24} />
+                </button>
+                <button
+                  className="zoom-out"
+                  onClick={() => setQrZoom(Math.max(qrZoom - 50, 256))}
+                  title="Zoom Out"
+                >
+                  <AiOutlineZoomOut size={24} />
+                </button>
+                <button
+                  className="fullscreen"
+                  onClick={() => setQrFullScreen(!qrFullScreen)}
+                  title={qrFullScreen ? 'Exit Full Screen' : 'Full Screen'}
+                >
+                  {qrFullScreen ? <AiOutlineFullscreenExit size={24} /> : <AiOutlineFullscreen size={24} />}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-
-
       {/* Modal for Student Details */}
       {showDetails && (
         <div className="modal">
           <div className="modal-content">
-            <button className="close-modal" onClick={closeModal}>x</button>
-            <h4>Attendance Details for {classDetails.students.find(s => s.studentId === showDetails)?.fname}</h4>
-            <table border="1" cellPadding="5">
-              <thead>
-                <tr>
-                  <th>Attendance Date</th>
-                  <th>Class Start Time</th>
-                  <th>Status</th>
-                  <th>Hours Present</th>
-                  <th>Hours Absent</th>
-                </tr>
-              </thead>
-              <tbody>
-                {classDetails.students.find(s => s.studentId === showDetails)?.attendance.map((record, idx) => (
-                  <tr key={idx}>
-                    <td>{record.attendanceDate}</td>
-                    <td>{record.classStartTime}</td>
-                    <td>{record.status}</td>
-                    <td>{record.hoursPresent}</td>
-                    <td>{record.hoursAbsent}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <button className="close-modal" onClick={closeModal}>
+              x
+            </button>
+            <h4>Attendance Details for Student</h4>
+            <p>
+              {classDetails.students.find((student) => student.studentId === showDetails)?.attendance.map(
+                (record, index) => (
+                  <div key={index}>
+                    <p>
+                      Date: {record.date} | Hours Present: {record.hoursPresent} | Hours Absent: {record.hoursAbsent}
+                    </p>
+                  </div>
+                )
+              )}
+            </p>
           </div>
         </div>
       )}

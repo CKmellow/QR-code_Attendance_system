@@ -17,6 +17,42 @@
     overflow-y: auto; /* Scroll if content overflows */
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   }
+  .back-button
+  {
+    position: absolute;
+  top: 20px; /* Adjust for desired vertical position */
+  right: 20px; /* Adjust for desired horizontal position */
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 6px 12px; /* Smaller padding for reduced width */
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px; /* Space between buttons */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+.scan-button {
+  position: absolute;
+  top: 60px; /* Adjust for desired vertical position */
+  right: 20px; /* Adjust for desired horizontal position */
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 6px 12px; /* Smaller padding for reduced width */
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px; /* Space between buttons */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-button:hover,
+.scan-button:hover {
+  background-color: #333; /* Slightly lighter black for hover effect */
+  transform: scale(1.05); /* Subtle grow effect */
+}
+
   
   /* Main content styling */
   .attendance-main-content {

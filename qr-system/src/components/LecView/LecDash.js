@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LecDash.css';
-import Loader from '../Loader';
+import Loader from '../Loader';  // Assuming you have the Loader component implemented
+import { toast } from 'sonner';
 
 const LecDash = () => {
   const [classes, setClasses] = useState([]);
@@ -17,28 +18,38 @@ const LecDash = () => {
     const fetchClasses = async () => {
       try {
         const response = await fetch(`http://localhost:5000/lecturer/classes/${lecturerId}`);
+        
         if (!response.ok) {
+          // Handle case when no classes are found (404)
+          if (response.status === 404) {
+            setClasses([]); // Set classes to an empty array if no classes are found
+            setError('No classes found for this lecturer.'); // Set a specific error message
+            return;
+          }
           throw new Error('Failed to fetch classes');
         }
+
         const data = await response.json();
-        setClasses(data);
+        setClasses(data); // Set the fetched class data
+
       } catch (err) {
-        setError(err.message);
+        setError(err.message); // Handle any other errors
       } finally {
-        setLoading(false);
+        setLoading(false); // Ensure loading state is set to false after fetching
       }
     };
 
-    fetchClasses();
-  }, [lecturerId]);
+    fetchClasses(); // Call the fetchClasses function
+
+  }, [lecturerId]); // Re-run when `lecturerId` changes
 
   const handleViewClass = (courseId) => {
     // Navigate to the class details page with the class ID
     navigate(`/class-details/lecturer/${courseId}`);
   };
 
-  if (loading) return <Loader/>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <Loader />;  // Show loader while data is fetching
+  if (error) return <h1>No classes. Please add a class</h1>;  // Show error message if there's an error
 
   return (
     <div className="dashboard-container">

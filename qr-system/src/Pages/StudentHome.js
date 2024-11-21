@@ -10,7 +10,7 @@ function StudentHome() {
           <div className="sidebar-container">  
             <Stusidebar />  
           </div>
-          <div className="main-content">  
+          <div className="content">  
             <Studash/>  
           </div>
         </div>

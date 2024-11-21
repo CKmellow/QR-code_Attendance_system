@@ -16,11 +16,20 @@ const StuDash = () => {
     const fetchClasses = async () => {
       try {
         const response = await fetch(`http://localhost:5000/student/classes/${studentId}`);
-        if (!response.ok) throw new Error('Failed to fetch classes');
-
+        
+        if (!response.ok) {
+          // Check for 404 error when no classes are found
+          if (response.status === 404) {
+            setClasses([]); // Set empty array if no classes found
+            setError("No classes found for this student.");
+            return;
+          }
+          throw new Error('Failed to fetch classes');
+        }
+    
         const data = await response.json();
-        setClasses(data);
-
+        setClasses(data);  // Set the fetched class data
+    
         // Fetch attendance data for each class
         const attendancePromises = data.map((classItem) =>
           fetch(`http://localhost:5000/class/details/student/${classItem._id}?studentId=${studentId}`)
@@ -30,15 +39,15 @@ const StuDash = () => {
               percentageAbsent: calculatePercentageAbsent(attendanceData.attendance),
             }))
         );
-
+    
         const attendanceResults = await Promise.all(attendancePromises);
-
+    
         // Create a mapping of classId to percentage absent
         const percentages = attendanceResults.reduce((acc, result) => {
           acc[result.classId] = result.percentageAbsent;
           return acc;
         }, {});
-
+    
         setAttendancePercentages(percentages);
       } catch (err) {
         setError(err.message);
@@ -46,6 +55,7 @@ const StuDash = () => {
         setLoading(false);
       }
     };
+    ;
 
     fetchClasses();
   }, [studentId]);
@@ -60,7 +70,7 @@ const StuDash = () => {
   };
 
   if (loading) return <Loader/>;
-  if (error) return <p>Error: {error}</p>;
+  if (error) return <h1>{error}</h1>;
 
   return (
     <div className="dashboard-container">

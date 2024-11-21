@@ -33,7 +33,13 @@
     font-size: 1.5em;
     transform: translateY(2px);
 }
-
+.content {
+    margin-left: 50px;  /* Leave space for the fixed sidebar */
+    padding: 20px;
+    width: 100%; /* Adjust width for the remaining space */
+    height: 100vh;        /* Full height for the main content */
+    background-color: white;
+  }
 /* Modal Styles */
 .modal {
     position: fixed;
