@@ -22,27 +22,29 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     const loginData = { _id, password };
-
+  
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch('https://qr-attendace-backend.onrender.com/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginData),
       });
-
+  
+      // Check if the response is OK before parsing JSON
+      if (!response.ok) {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message);
+        toast.error(errorData.message);
+        return;
+      }
+  
       const data = await response.json();
-
-      if (response.status === 200) {
-        localStorage.setItem('user', JSON.stringify(data.user));
-
-        if (data.user.role === 'student') {
-          navigate('/stu-home');
-        } else if (data.user.role === 'lecturer') {
-          navigate('/lec-home');
-        }
-      } else {
-        setErrorMessage(data.message);
-        toast.error(data.message);
+      localStorage.setItem('user', JSON.stringify(data.user));
+  
+      if (data.user.role === 'student') {
+        navigate('/stu-home');
+      } else if (data.user.role === 'lecturer') {
+        navigate('/lec-home');
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -50,13 +52,14 @@ const LoginPage = () => {
       toast.error('Server error. Please try again later.');
     }
   };
+  
 
   // Handle Signup
   const handleSignup = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/signup', {
+      const response = await fetch('https://qr-attendace-backend.onrender.com/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(signupData),

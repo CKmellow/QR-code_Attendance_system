@@ -28,7 +28,7 @@ const LecturerClassDetails = () => {
   useEffect(() => {
     const fetchClassDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/class/details/lecturer/${courseId}`);
+        const response = await fetch(`https://qr-attendace-backend.onrender.com/class/details/lecturer/${courseId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch class details');
         }

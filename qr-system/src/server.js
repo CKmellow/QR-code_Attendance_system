@@ -461,17 +461,26 @@ app.post('/signup', async (req, res) => {
 
 // Configure Nodemailer transporter
 const transporter = nodemailer.createTransport({
-  service: 'Gmail', // Adjust based on your email provider
+  service: 'Gmail', // Use Gmail's SMTP service
   auth: {
-    user: process.env.EMAIL_USER, 
-    pass: process.env.EMAIL_PASS, 
+    user: process.env.EMAIL_USER, // Your email address
+    pass: process.env.EMAIL_PASS, // Your email password or app password
   },
+});
+
+// Verify transporter configuration
+transporter.verify((error, success) => {
+  if (error) {
+    console.error('Error with transporter configuration:', error);
+  } else {
+    console.log('Email transporter is ready to send messages!');
+  }
 });
 
 // Function to send a confirmation email
 async function sendConfirmationEmail(to, studentName, courseName, attendanceDate, classStartTime) {
   const mailOptions = {
-    from: '"Attendance System" <' + process.env.EMAIL_USER + '>', // Sender's email
+    from: `"Attendance System" <${process.env.EMAIL_USER}>`, // Sender's email
     to, // Receiver's email
     subject: 'Attendance Confirmation',
     html: `
@@ -481,12 +490,29 @@ async function sendConfirmationEmail(to, studentName, courseName, attendanceDate
         <li><b>Date:</b> ${attendanceDate}</li>
         <li><b>Start Time:</b> ${classStartTime}</li>
       </ul>
-      <p>Thank you!</p>
+      <p>Thank you for attending!</p>
     `,
   };
 
-  await transporter.sendMail(mailOptions);
+  try {
+    // Send email
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`Email successfully sent to ${to}: ${info.messageId}`);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
 }
+
+// Example Usage
+(async () => {
+  await sendConfirmationEmail(
+    'student@example.com', // Receiver email
+    'John Doe',           // Student name
+    'Software Engineering', // Course name
+    '2024-11-20',          // Attendance date
+    '10:00 AM'             // Class start time
+  );
+})();
 
 // POST route for updating attendance
 app.post('/attendance/update', async (req, res) => {

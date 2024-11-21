@@ -24,7 +24,7 @@ const StudentAttendance = () => {
           return;
         }
 
-        const response = await axios.get(`/class/details/student/${courseId}`, {
+        const response = await axios.get(`https://qr-attendace-backend.onrender.com/class/details/student/${courseId}`, {
           params: { studentId },
         });
         setAttendanceData(response.data);
@@ -96,7 +96,7 @@ const StudentAttendance = () => {
         }
   
         // Send request to backend
-        const response = await axios.post('/attendance/update', {
+        const response = await axios.post('https://qr-attendace-backend.onrender.com/attendance/update', {
           studentId,
           courseId: qrData.courseId,
           attendanceDate: qrData.date,
