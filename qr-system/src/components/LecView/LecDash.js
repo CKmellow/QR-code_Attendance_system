@@ -15,7 +15,7 @@ const LecDash = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/lecturer/classes/${lecturerId}`);
+        const response = await fetch(`https://qr-attendace-backend.onrender.com/lecturer/classes/${lecturerId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch classes');
         }

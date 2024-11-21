@@ -14,7 +14,7 @@ const StuDash = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/student/classes/${studentId}`);
+        const response = await fetch(`https://qr-attendace-backend.onrender.com/student/classes/${studentId}`);
         if (!response.ok) throw new Error('Failed to fetch classes');
 
         const data = await response.json();
@@ -22,13 +22,23 @@ const StuDash = () => {
 
         // Fetch attendance data for each class
         const attendancePromises = data.map((classItem) =>
-          fetch(`http://localhost:5000/class/details/student/${classItem._id}?studentId=${studentId}`)
-            .then((res) => res.json())
+          fetch(`https://qr-attendace-backend.onrender.com/class/details/student/${classItem._id}?studentId=${studentId}`)
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error(`Failed to fetch attendance for class ID: ${classItem._id}`);
+              }
+              return res.json();
+            })
             .then((attendanceData) => ({
               classId: classItem._id,
               percentageAbsent: calculatePercentageAbsent(attendanceData.attendance),
             }))
+            .catch((error) => {
+              console.error(`Error fetching attendance for class ID ${classItem._id}:`, error);
+              return { classId: classItem._id, percentageAbsent: null }; // Return fallback data in case of error
+            })
         );
+        
 
         const attendanceResults = await Promise.all(attendancePromises);
 
