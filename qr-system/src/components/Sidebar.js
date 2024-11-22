@@ -30,7 +30,7 @@ const Sidebar = () => {
     // Get the logged-in lecturer's ID
     const lecturerId = user?._id;
     if (!lecturerId) {
-      toast.error("Lecturer ID not found. Please log in.");
+      toast.error("Lecturer ID not found. Please log in again.");
       return;
     }
   

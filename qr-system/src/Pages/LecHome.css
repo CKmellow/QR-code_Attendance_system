@@ -44,7 +44,7 @@ body, html {
   font-size: 24px;
   padding: 8px;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -155,7 +155,7 @@ body, html {
   font-size: 14px;
   margin: 10px 0;
   padding: 10px 20px;
-  background-color: #34495e;
+  background-color: #BFA46A;
   border-radius: 4px;
   text-decoration: none;
   cursor: pointer;
