@@ -1,50 +1,57 @@
-/* General container styling */
+
 .student-attendance-container {
-    display: flex;
-    min-height: 100vh;
-    background-color: #f8f9fa; /* Light gray background */
-    font-family: 'Arial', sans-serif;
-  }
-  
-  /* Sidebar styling */
-  .stu-sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 250px; /* Sidebar width */
-    height: 100vh; /* Full viewport height */
-    padding: 20px;
-    overflow-y: auto; /* Scroll if content overflows */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  }
-  .back-button
-  {
-    position: absolute;
-  top: 20px; /* Adjust for desired vertical position */
-  right: 20px; /* Adjust for desired horizontal position */
-  background-color: black;
-  color: white;
-  border: none;
-  padding: 6px 12px; /* Smaller padding for reduced width */
-  font-size: 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-left: 10px; /* Space between buttons */
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-.scan-button {
+  display: flex;
+  min-height: 100vh; /* Light gray background */
+  font-family: 'Arial', sans-serif;
+  flex-direction: row;
+}
+
+/* Sidebar styling */
+.stu-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px; /* Sidebar width */
+  height: 100vh; /* Full viewport height */
+  padding: 20px;
+  overflow-y: auto; /* Scroll if content overflows */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+.stu-sidebar.hide {
+  transform: translateX(-100%);
+}
+.back-button{
+  width: 50px;
   position: absolute;
-  top: 60px; /* Adjust for desired vertical position */
-  right: 20px; /* Adjust for desired horizontal position */
-  background-color: black;
+  top: 20px;
+  right: 20px;
   color: white;
   border: none;
-  padding: 6px 12px; /* Smaller padding for reduced width */
-  font-size: 14px;
+  padding: 8px 16px;
   border-radius: 5px;
+  font-size: 14px;
   cursor: pointer;
-  margin-left: 10px; /* Space between buttons */
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  z-index: 100; /* Ensure it's above other content */
+  background: none;
+}
+.scan-button {
+  width: 50px;
+  position: absolute;
+  top: 70px;
+  right: 20px;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  z-index: 100; /* Ensure it's above other content */
+  background: none;
 }
 
 .back-button:hover,
@@ -53,153 +60,275 @@
   transform: scale(1.05); /* Subtle grow effect */
 }
 
-  
-  /* Main content styling */
-  .attendance-main-content {
-    margin-left: 250px; /* Match sidebar width */
-    flex: 1;
-    padding-left: 50px;
-    display: flex;
+/* Main content styling */
+.attendance-main-content {
+  margin-left: 300px; /* Match sidebar width */
+  flex: 1;
+  padding-left: 70px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+} /* Let the main content take the remaining space */
+
+/* Header styling */
+.attendance-header {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.attendance-header h1,
+.attendance-header h2,
+.attendance-header h3 {
+  color: #495057;
+  margin: 0;
+}
+
+.attendance-header .back-button:hover,
+.attendance-header .scan-button:hover {
+  background-color: white;
+}
+
+/* Table container styling */
+.attendance-table-container {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.attendance-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.attendance-table-container table th,
+.attendance-table-container table td {
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  text-align: left;
+}
+
+.attendance-table-container table th {
+  background-color: #f1f3f5;
+  color: #495057;
+}
+
+.attendance-table-container table tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+/* Loading and error messages */
+.loading-message,
+.error-message {
+  text-align: center;
+  font-size: 16px;
+  color: #6c757d;
+}
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.qr-scanner-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+  z-index: 1000;
+}
+
+.qr-scanner-content {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  position: relative;
+}
+
+.close-modal-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: black;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.qr-reader-container {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.qr-reader-container.success {
+  box-shadow: 0 0 15px 3px green; /* Green glow for success */
+}
+
+.qr-reader-container.error {
+  box-shadow: 0 0 15px 3px red; /* Red glow for error */
+}
+
+/* Responsive Design for Mobile */
+@media (max-width: 768px) {
+  .student-attendance-container {
     flex-direction: column;
-  }/* Let the main content take the remaining space */
-  
-  
-  /* Header styling */
-  .attendance-header {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
   }
-  
-  .attendance-header h1,
-  .attendance-header h2,
-  .attendance-header h3 {
-    color: #495057;
-    margin: 0;
-  }
-  
-  .attendance-header .back-button,
-  .attendance-header .scan-button {
-    padding: 10px 15px;
-    font-size: 14px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .attendance-header .back-button:hover,
-  .attendance-header .scan-button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Table container styling */
-  .attendance-table-container {
-    margin-top: 20px;
-    overflow-x: auto;
-  }
-  
-  .attendance-table-container table {
+
+  .stu-sidebar {
     width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .attendance-table-container table th,
-  .attendance-table-container table td {
-    padding: 12px;
-    border: 1px solid #dee2e6;
-    text-align: left;
-  }
-  
-  .attendance-table-container table th {
-    background-color: #f1f3f5;
-    color: #495057;
-  }
-  
-  .attendance-table-container table tr:nth-child(even) {
-    background-color: #f8f9fa;
-  }
-  
-  /* Loading and error messages */
-  .loading-message,
-  .error-message {
-    text-align: center;
-    font-size: 16px;
-    color: #6c757d;
-  }
-  
-  .qr-scanner-modal {
-    position: fixed;
+    transform: translateX(-100%);
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    background-color: #fff;
     z-index: 1000;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   }
-  
-  .qr-scanner-content {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    position: relative;
+
+  .stu-sidebar.open {
+    transform: translateX(0);
   }
-  
-  .close-modal-button {
+
+  .attendance-main-content {
+    padding: 10px;
+    margin-top: 50px; /* Adjust margin to avoid overlap with fixed sidebar */
+  }
+
+  .attendance-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .back-button, .scan-button {
+    font-size: 1.5rem;
+  }
+}
+.qr-scanner-content {
+  width: 95%;
+  padding: 15px;
+}
+
+h2 {
+  font-size: 18px;
+}
+
+.close-modal-button {
+  font-size: 14px;
+}
+
+/* Modal styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+}
+
+.close-modal:hover {
+  color: #000;
+}
+
+/* Media queries for mobile view */
+@media (max-width: 798px) {
+  .student-attendance-container {
+    flex-direction: column;
+  }
+
+  .stu-sidebar {
+    width: 100%;
+    transform: translateX(-100%);
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: black;
-    border: none;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #fff;
+    z-index: 1000;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .stu-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .attendance-main-content {
+    padding: 10px;
+    margin-top: 50px; /* Adjust margin to avoid overlap with fixed sidebar */
+  }
+
+  .attendance-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .back-button, .scan-button {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .attendance-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .back-button, .scan-button {
+    font-size: 1.2rem;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .close-modal {
     font-size: 16px;
-    cursor: pointer;
-    color: white;
   }
-  
-  h2 {
-    margin-bottom: 20px;
-  }
-  
-  .qr-reader-container {
-    position: relative;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  
-  .qr-reader-container.success {
-    box-shadow: 0 0 15px 3px green; /* Green glow for success */
-  }
-  
-  .qr-reader-container.error {
-    box-shadow: 0 0 15px 3px red; /* Red glow for error */
-  }
-  
-  /* Responsive Design for Mobile */
-  @media (max-width: 768px) {
-    .qr-scanner-content {
-      width: 95%;
-      padding: 15px;
-    }
-  
-    h2 {
-      font-size: 18px;
-    }
-  
-    .close-modal-button {
-      font-size: 14px;
-    }
-  }
- 
-  
+}

@@ -17,7 +17,7 @@ const LecDash = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await fetch(`https://qr-attendace-backend.onrender.com/lecturer/classes/${lecturerId}`);
+        const response = await fetch(`/lecturer/classes/${lecturerId}`);
         if (!response.ok) {
           // Handle case when no classes are found (404)
           if (response.status === 404) {

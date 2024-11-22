@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaPlus, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./StuSidebar.css";
+import { toast } from "sonner";
 
 const StuSidebar = ({ setClasses }) => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -23,11 +24,12 @@ const StuSidebar = ({ setClasses }) => {
 
     if (!courseId.trim()) {
       setMessage("Please enter a course ID.");
+      toast.error("Please enter a course ID.");
       return;
     }
 
     try {
-      const response = await fetch("https://qr-attendace-backend.onrender.com/join-class", {
+      const response = await fetch("/join-class", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,6 +44,7 @@ const StuSidebar = ({ setClasses }) => {
 
       if (response.ok) {
         setMessage(data.message || "Successfully joined the class!");
+        toast.success(data.message || "Successfully joined the class!");
         setCourseId(""); // Clear the input
         setShowJoinClassModal(false); // Close modal
 
@@ -49,10 +52,12 @@ const StuSidebar = ({ setClasses }) => {
         setClasses((prevClasses) => [...prevClasses, data.newClass]);
       } else {
         setMessage(data.message || "Failed to join the class.");
+        toast.error(data.message || "Failed to join the class.");
       }
     } catch (error) {
       console.error("Error joining class:", error);
       setMessage("Server error. Please try again later.");
+      toast.error("Server error. Please try again later.");
     }
   };
 

@@ -1,11 +1,11 @@
 /* src/components/LecView/LecDash.css */
 .dashboard-container {
   padding-top: 5px;
-    /* padding: 20px; */
+ padding: 20px; 
   }
 
   .dash{
-    padding-left: 20px;
+    padding-left: 40px;
   }
   
   .class-grid {

@@ -23,19 +23,19 @@ const Sidebar = () => {
     e.preventDefault();
   
     if (!className.trim()) {
-      alert("Please enter a class name");
+      toast.error("Please enter a class name.");
       return;
     }
   
     // Get the logged-in lecturer's ID
     const lecturerId = user?._id;
     if (!lecturerId) {
-      alert("Unable to fetch lecturer ID. Please log in again.");
+      toast.error("Lecturer ID not found. Please log in.");
       return;
     }
   
     try {
-      const response = await fetch("https://qr-attendace-backend.onrender.com/add-class", {
+      const response = await fetch("/add-class", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

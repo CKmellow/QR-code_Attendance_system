@@ -24,11 +24,12 @@ const LecturerClassDetails = () => {
   const [showDetails, setShowDetails] = useState(null); // Tracks which student's details are being shown
   const [qrZoom, setQrZoom] = useState(256); // Default QR code size
   const [qrFullScreen, setQrFullScreen] = useState(false);
+  const [countdown, setCountdown] = useState(''); // Add countdown state
 
   useEffect(() => {
     const fetchClassDetails = async () => {
       try {
-        const response = await fetch(`https://qr-attendace-backend.onrender.com/class/details/lecturer/${courseId}`);
+        const response = await fetch(`/class/details/lecturer/${courseId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch class details');
         }
@@ -75,6 +76,32 @@ const LecturerClassDetails = () => {
     const qrData = { courseId, date, startTime, duration, expirationTimestamp: expirationTimestamp.toISOString() };
     setGeneratedQrData(qrData); // Pass data for QR generation
     setQrModalOpen(false);
+    startCountdown(expirationTimestamp);
+  };
+
+  const startCountdown = (expirationTimestamp) => {
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const expiryTime = new Date(expirationTimestamp).getTime();
+      const timeRemaining = expiryTime - now;
+
+      if (timeRemaining <= 0) {
+        setGeneratedQrData(false); // Close modal
+        clearInterval(countdownInterval); // Stop the countdown
+      } else {
+        // Calculate minutes and seconds
+        const minutes = Math.floor(timeRemaining / 60000);
+        const seconds = Math.floor((timeRemaining % 60000) / 1000);
+        setCountdown(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+      }
+    };
+
+    // Start the interval
+    const countdownInterval = setInterval(updateCountdown, 1000);
+    updateCountdown(); // Initialize immediately
+
+    // Clear interval on component unmount
+    return () => clearInterval(countdownInterval);
   };
 
   const openModal = (studentId) => setShowDetails(studentId);
@@ -89,11 +116,11 @@ const LecturerClassDetails = () => {
       {/* Top navigation bar */}
       <div className="top-bar">
         <button className="home-icon" title="Home" onClick={() => navigate('/lec-home')}>
-          <FaHome size={24} />
+          <FaHome style={{ color: "black", fontSize: "2rem" }} size={24} />
         </button>
 
         <button className="generate-icon" title="Generate QR Code" onClick={() => setQrModalOpen(true)}>
-          <FaQrcode size={24} />
+          <FaQrcode  style={{ color: "black", fontSize: "2rem" }} size={24} />
         </button>
       </div>
 
@@ -160,7 +187,7 @@ const LecturerClassDetails = () => {
       {/* QR Modal */}
       {qrModalOpen && (
         <div className="modal">
-          <div className="modal-content">
+          <div className="qr-modal-content">
             <button className="close-modal" onClick={() => setQrModalOpen(false)}>
               x
             </button>
@@ -187,7 +214,7 @@ const LecturerClassDetails = () => {
                   onChange={handleQrInputChange}
                 />
               </label>
-              <button className="details" onClick={handleGenerateQr}>
+              <button className="details" type="button" onClick={handleGenerateQr}>
                 Generate
               </button>
             </form>
@@ -205,6 +232,7 @@ const LecturerClassDetails = () => {
             <h4>QR Code for Session</h4>
             <div>
               <p>Expires At: {new Date(generatedQrData.expirationTimestamp).toLocaleTimeString()}</p>
+              <p>Time Remaining: {countdown}</p>
               <QRCodeSVG
                 value={JSON.stringify(generatedQrData)}
                 size={qrZoom}
@@ -246,7 +274,7 @@ const LecturerClassDetails = () => {
               x
             </button>
             <h4>Attendance Details for Student</h4>
-            <p>
+            <div>
               {classDetails.students.find((student) => student.studentId === showDetails)?.attendance.map(
                 (record, index) => (
                   <div key={index}>
@@ -256,7 +284,7 @@ const LecturerClassDetails = () => {
                   </div>
                 )
               )}
-            </p>
+            </div>
           </div>
         </div>
       )}

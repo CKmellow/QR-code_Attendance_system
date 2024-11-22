@@ -1,11 +1,10 @@
 /* src/components/LecView/LecDash.css */
 .dashboard-container {
-    padding-top: 5px;
-    padding-left: 20px; 
+    padding-top: 5px; 
     }
   
     .dash{
-      padding-left: 20px;
+      padding-left: 40px;
     }
     
     .class-grid {
@@ -46,10 +45,5 @@
     .view-class-button:hover {
       background-color: #885f12;
     }
-    .main-content {
-      flex: 1;
-      padding-left: 50px;
-      display: flex;
-      flex-direction: column;
-    }
+
     

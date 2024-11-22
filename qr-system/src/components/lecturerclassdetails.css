@@ -53,12 +53,12 @@ table tr:nth-child(even) {
 }
 
 /* Home button styling */
-.back-button {
-  width: 100px;
+.home-icon {
+  width: 50px;
   position: absolute;
   top: 20px;
   right: 20px;
-  background-color: black; /* Blue */
+  background-color: black; 
   color: white;
   border: none;
   padding: 8px 16px;
@@ -69,12 +69,11 @@ table tr:nth-child(even) {
   transition: background-color 0.3s ease;
   z-index: 100; /* Ensure it's above other content */
 }
-.generate {
-  width: 100px;
+.generate-icon {
+  width: 50px;
   position: absolute;
-  top: 70px;
   right: 20px;
-  background-color: black; /* Blue */
+  top: 70px;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -104,7 +103,16 @@ table tr:nth-child(even) {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
-  width: 80%;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+.qr-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
   max-width: 600px;
   position: relative;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -145,7 +153,7 @@ table tr:nth-child(even) {
   width: 100%;
 }
 
-.modal-content input {
+.modal-content input,.qr-modal-content input {
   padding: 10px;
   font-size: 16px;
   border-radius: 5px;
@@ -154,7 +162,7 @@ table tr:nth-child(even) {
   margin-bottom: 15px;
 }
 
-.modal-content button.details {
+.modal-content button.details,.qr-modal-content button.details {
   width: 100%;
   background-color: #BFA46A; /* Golden background */
   color: white;
@@ -165,7 +173,7 @@ table tr:nth-child(even) {
   transition: background-color 0.3s ease;
 }
 
-.modal-content button.details:hover {
+.modal-content button.details:hover.qr-modal-content button.details:hover {
   background-color: #885f12; /* Darker golden on hover */
 }
 
