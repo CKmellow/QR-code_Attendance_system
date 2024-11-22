@@ -72,7 +72,7 @@
 /* Main content section */
 .attendance-main-content {
   margin-left: 250px; /* Default when sidebar is visible */
-  padding: 20px;
+  padding: 70px;
   width: calc(100% - 250px); /* Adjust width */
   background-color: white;
   height: 100vh;
@@ -190,7 +190,7 @@ th {
     width: calc(100% - 200px);
   }
 
-  .attendance-main-content.no-sidebar {
+  .attendance-main-content.hide {
     margin-left: 0;
     width: 100%;
   }

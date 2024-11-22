@@ -124,7 +124,8 @@ const StudentAttendance = () => {
       <div className={`sidebar-container ${!isSidebarOpen ? 'hide' : ''}`}>
         <StuSidebar />
       </div>
-      <div className="attendance-main-content">
+      <div className={`attendance-main-content ${!isSidebarOpen ? 'hide' : ''}`}>
+  
         <div className="attendance-header">
           <button className="back-button" onClick={() => navigate('/stu-home')}>
             <FaHome style={{ color: 'black', fontSize: '2rem' }} />
