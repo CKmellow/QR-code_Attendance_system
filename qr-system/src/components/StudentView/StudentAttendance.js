@@ -30,7 +30,7 @@ const StudentAttendance = () => {
           throw new Error('Student ID not found. Please log in.');
         }
 
-        const response = await axios.get(`/class/details/student/${courseId}`, {
+        const response = await axios.get(`https://qr-attendace-backend.onrender.com/class/details/student/${courseId}`, {
           params: { studentId },
         });
         setAttendanceData(response.data);
@@ -89,7 +89,7 @@ const StudentAttendance = () => {
         }
 
         // Update attendance
-        const response = await axios.post('/attendance/update', {
+        const response = await axios.post('https://qr-attendace-backend.onrender.com/attendance/update', {
           studentId,
           courseId: qrData.courseId,
           attendanceDate: qrData.date,

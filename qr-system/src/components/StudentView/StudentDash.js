@@ -21,7 +21,7 @@ const StuDash = () => {
 
     const fetchClasses = async () => {
       try {
-        const response = await fetch(`/student/classes/${studentId}`);
+        const response = await fetch(`https://qr-attendace-backend.onrender.com/student/classes/${studentId}`);
         if (!response.ok) {
           if (response.status === 404) {
             setClasses([]); // Set empty array if no classes found
@@ -36,7 +36,7 @@ const StuDash = () => {
 
         // Fetch attendance data for each class
         const attendancePromises = data.map((classItem) =>
-          fetch(`/class/details/student/${classItem._id}?studentId=${studentId}`)
+          fetch(`https://qr-attendace-backend.onrender.com/class/details/student/${classItem._id}?studentId=${studentId}`)
             .then((res) => {
               if (!res.ok) {
                 throw new Error(`Failed to fetch attendance for class ID: ${classItem._id}`);

@@ -29,7 +29,7 @@ const StuSidebar = ({ setClasses }) => {
     }
 
     try {
-      const response = await fetch("/join-class", {
+      const response = await fetch("https://qr-attendace-backend.onrender.com/join-class", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
