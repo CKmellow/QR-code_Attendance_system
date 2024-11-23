@@ -24,7 +24,7 @@ const LoginPage = () => {
     const loginData = { _id, password };
   
     try {
-      const response = await fetch('/login', {
+      const response = await fetch('https://qr-attendace-backend.onrender.com/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginData),
