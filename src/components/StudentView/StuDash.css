@@ -1,0 +1,49 @@
+/* src/components/LecView/LecDash.css */
+.dashboard-container {
+    padding-top: 5px; 
+    }
+  
+    .dash{
+      padding-left: 40px;
+    }
+    
+    .class-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-gap: 20px;
+    }
+    
+    .class-tile {
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .class-tile h3 {
+      margin: 0 0 10px;
+    }
+    
+    .class-tile p {
+      margin: 0 0 15px;
+    }
+    .percentage{
+        font-style: italic;
+        color: #e03517a3;
+    }
+    
+    .view-class-button {
+      padding: 10px 20px;
+      background-color: #BFA46A;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .view-class-button:hover {
+      background-color: #885f12;
+    }
+
+    
