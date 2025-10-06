@@ -3,7 +3,7 @@
 
 The QR Code Attendance System is a web-based platform designed to simplify attendance tracking in universities and colleges. It allows lecturers to generate unique QR codes for each class session and enables students to mark attendance by scanning the code via their mobile devices. The system securely logs attendance data in real-time, reducing manual errors and preventing proxy attendance.
 
-🚀 Key Features
+🚀 Key Features   
 
 Role-Based Access: Separate dashboards for Lecturers and Students.
 
